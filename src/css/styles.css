@@ -1,0 +1,33 @@
+/* * { outline: 1px dashed blue; } */
+@font-face {
+  font-family: topsecret;
+  src: url('../fonts/top-secret.ttf');
+  font-style: normal;
+}
+
+:root {
+  --nav-bar-height: 5rem;
+  --text-col: white;
+  --red: rgb(158, 40, 40);
+}
+html {
+  color: var(--text-col);
+  font-family: poppins, Verdana, sans-serif;
+  font-size: 10px;
+}
+body {
+  background-color: rebeccapurple;
+}
+#content {
+  position: fixed;
+  top: var(--nav-bar-height);
+  left: 0px;
+  width: 100%;
+}
+button {
+  background-color: rgba(255, 255, 255, 0);
+  color: var(--text-col);
+}
+button:hover {
+  cursor: pointer;
+}

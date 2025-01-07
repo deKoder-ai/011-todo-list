@@ -1,0 +1,132 @@
+https://www.theodinproject.com/lessons/javascript-webpack
+https://en.wikipedia.org/wiki/Minification_(programming)
+https://developer.mozilla.org/en-US/docs/Glossary/Tree_shaking
+https://webpack.js.org/guides/asset-management/#loading-images
+
+// create package.json to record info about used packages
+mkdir webpack-practice &&
+cd webpack-practice &&
+npm init -y
+
+// install webpack (two packages)
+// only used for dev, not part of the final production 
+// code run by the browser
+npm install --save-dev webpack webpack-cli
+// can also use -D as as shortcut for the --save-dev flag
+// this creates a node_modules dir and package-lock.json
+// node_modules contains wbpack's code and plock tracks
+// package information
+
+// create a src dir with index.js that will be the 
+// entry point for our js
+mkdir src && touch src/index.js
+
+// create webpack config file which contains all the details
+// needed for bundling such as the entry point, output
+// destination, plugins and loaders
+touch webpack.config.js
+
+// webpack.config.js
+const path = require("path");
+
+module.exports = {
+  mode: "development",
+  entry: "./src/index.js",
+  output: {
+    filename: "main.js",
+    path: path.resolve(__dirname, "dist"),
+    clean: true,
+  },
+};
+
+// run webpack
+npx webpack
+
+// test main.js
+node dist/main.js
+
+// install Html webpack plugin to handle
+// html bundling
+npm install --save-dev html-webpack-plugin
+
+// create template.html in src dir
+touch src/template.html
+// no need for script tag in this file html plugin
+// automatically adds the connection
+
+// add to config file to ensure webpack has access to 
+// the html plugin
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: "./src/template.html",
+    }),
+  ],
+
+// install two plugins to handle css
+npm install --save-dev style-loader css-loader
+// css loader reads css and stores result in a string
+// style-loader takes the string and adds the js that
+// wil apply those styles to the page
+
+// add these loaders to config
+  module: {
+    rules: [
+      {
+        test: /\.css$/i,
+        use: ["style-loader", "css-loader"],
+      },
+    ],
+
+// loading img files
+// css-loader already handles img files inside css
+// html-loader needed to load images referenced in html
+npm install --save-dev html-loader
+
+// add to modules.rules array in config
+{
+  test: /\.html$/i,
+  loader: "html-loader",
+}
+
+// add an asset/resource rule to config to handle files 
+// loaded into js
+{
+  test: /\.(png|svg|jpg|jpeg|gif)$/i,
+  type: "asset/resource",
+}
+
+// handling fonts: add to the module array in config
+    {
+    test: /\.(woff|woff2|eot|ttf|otf)$/i,
+    type: 'asset/resource',
+    },
+
+// install webpack-dev-server - automatically updates
+// site when changes are saved
+npm install --save-dev webpack-dev-server
+
+// add to config to create source map for errors on dev server
+  devtool: "eval-source-map",
+  devServer: {
+    watchFiles: ["./src/template.html"],
+  },
+
+// host web page on http://localhost:8080/
+npx webpack serve
+
+
+Deployment
+Let’s deploy your project to GitHub pages! This is a little more work than it has been for previous projects, because GitHub Pages tries to look for an index.html in the root of your project, but yours is inside dist! We will need to do a few steps to push the contents of your dist directory to its own branch on GitHub, which will then have a root-level index.html for GitHub pages to serve.
+
+You don’t need to know exactly what all the commands do - as long as you follow the instructions below carefully you should be fine. You can use these instructions to deploy your project initially, and also redeploy it again if you make more changes to your project later.
+
+Make a new branch to deploy from by running git branch gh-pages. You only need to do this the first time you deploy. The rest of the steps should be done every time you deploy or redeploy your project.
+Make sure you have all your work committed. You can use git status to see if there’s anything that needs committing.
+Run git checkout gh-pages && git merge main --no-edit to change branch and sync your changes from main so that you’re ready to deploy.
+Now let’s bundle our application into dist with your build command. For now, that’s npx webpack.
+Now there are a few more commands. Run each of these in order:
+
+git add dist -f && git commit -m "Deployment commit"
+git subtree push --prefix dist origin gh-pages
+git checkout main
+Recall that the source branch for GitHub Pages is set in your repository’s settings. Get this changed to the gh-pages branch. That should be everything!
