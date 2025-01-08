@@ -1,4 +1,4 @@
-
+<div id="mask-page"></div>
 
 <div id="home-grid">
   <div id="left-sidebar">
@@ -19,6 +19,33 @@
   </div>
   
   <div id="main-content">
+    <!-- forms -->
+    <div class="form-container" id="np-form">
+      
+      <form action="" id="new-project-form">
+        <button id="close-np-form"></button>
+        <div class="input-container">
+          <div class="input-div">
+            <label for="new-project-name">Name:</label>
+            <input type="text"
+              name="new-project-name"
+              id="new-project-name"
+              placeholder="Project name..."
+              required>
+          </div>
+          <div class="input-div">
+            <label for="new-project-due-date">Due Date:</label>
+            <input type="date"
+              name="new-project-due-date"
+              id="new-project-due-date"
+              required>
+          </div>
+        </div>
+        <button id="new-project-submit-btn">Add Project</button>
+      </form>
+    </div>
+
+    <!-- todo content -->
     <div id="project-head">
       <div id="project-title-head">
         <h2 id="project-title">Project Title</h2>
@@ -209,4 +236,5 @@
     </div>
   </div>
 </div>
+
 
