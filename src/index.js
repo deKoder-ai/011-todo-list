@@ -4,7 +4,6 @@ import './css/reset.css';
 import './css/styles.css';
 import './css/nav.css';
 import { navBar } from './js/nav.js';
-import { greeting } from "./greeting.js";
 import { todo } from './js/todo.js';
 import { getDate } from './js/functions.js';
 import { Projects } from './js/Projects.js';
@@ -37,6 +36,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const body = document.querySelector('body');
   body.addEventListener('click', function(e) {
       const target = e.target;
+      console.log(target);
       switch(target.id) {
         // navigation events
           case 'dropdown-btn':
@@ -81,7 +81,12 @@ document.addEventListener('DOMContentLoaded', function() {
             Projects.closeNewForm();
             break;
           case 'new-project-submit-btn':
-
+              e.preventDefault();
+              Projects.new();
+              Projects.closeNewForm();
+              projectTitle.innerText = Projects.list[Projects.list.length - 1].name;
+              mainDueDate.innerText = Projects.formatDate(Projects.list[Projects.list.length - 1].dueDate);
+              console.log(Projects.list);
             break;
 
           default:
@@ -92,6 +97,10 @@ document.addEventListener('DOMContentLoaded', function() {
       }
   });
 
+
+
+  
+  
 
 
 
@@ -111,5 +120,7 @@ document.addEventListener('keydown', function(event) {
     } else if (Projects.toggleNewProjectForm === true) {
       Projects.closeNewForm();
     }
+  } else if (event.key === '+') {
+    Projects.newForm();
   }
 });

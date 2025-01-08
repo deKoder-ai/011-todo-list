@@ -20,7 +20,7 @@
   height: calc(131px);
   z-index: 20;
 }
-#left-sidebar button {
+#left-sidebar-head button {
   display: block;
   color: black;
   border-bottom: 1px solid rgb(112, 112, 112);
@@ -32,8 +32,8 @@
   font-size: 1.7rem;
   box-shadow: 0px 3px 5px #a8aac925;
 }
-#left-sidebar .header-btns:hover, #left-sidebar-projects button:hover,
-#left-sidebar .header-btns:focus, #left-sidebar-projects button:focus   {
+#left-sidebar .header-btns:hover,
+#left-sidebar .header-btns:focus {
   outline: none;
   background-color: var(--red);
   color: white;
@@ -56,7 +56,6 @@
   background-size: 80% 80%;
   border-radius: 5px;
   outline: 1px solid rgb(116, 116, 116);
-  
 }
 #add-project-btn:hover,
 #add-project-btn:focus {
@@ -65,10 +64,16 @@
   box-shadow: 2px 2px 5px #7d84e29d;
 }
 
-#left-sidebar-projects button {
-  /* padding: 10px 20px; */
-  width: 100%;
+.project-btn {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 99%;
   font-size: 1.5rem;
+  color: black;
+  border-bottom: 1px solid rgb(112, 112, 112);
+  padding: 7px 20px;
 }
 
 
@@ -78,14 +83,14 @@
   position: sticky;
   top: calc(var(--nav-bar-height) + 131px);
   width: 100%;
-  height: calc(100vh - var(--nav-bar-height) - 141px);
+  height: calc(100vh - var(--nav-bar-height) - 131px);
   background-color: white;
   border: 1px solid black;
   overflow-y: auto; /* Add vertical scrollbar if content overflows */
 }
 
 
-#left-sidebar-content button:hover,
+/* #left-sidebar-content button:hover,
 #left-sidebar-content button:focus  {
   display: block;
   color: black;
@@ -94,7 +99,15 @@
   font-size: 1.8rem;
   text-align: left;
   border-radius: 0px 0px 15px 0px;
-}
+} */
+
+/* #left-sidebar button {
+  display: block;
+  color: black;
+  border-bottom: 1px solid rgb(112, 112, 112);
+  padding: 7px 20px;
+  text-align: left;
+} */
 
 
 
