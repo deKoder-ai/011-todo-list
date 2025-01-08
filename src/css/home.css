@@ -1,0 +1,149 @@
+
+#home-grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 2fr 8fr;
+}
+
+#left-sidebar {
+  position: relative;
+  top: 0;
+  background-color: white;
+  width: 100%;
+  box-shadow: 5px 1px 20px rgba(0, 0, 0, 0.514);
+  z-index: 10;
+}
+#left-sidebar-head {
+  position: sticky;
+  top: var(--nav-bar-height);
+  width: 100%;
+  height: calc(131px);
+  z-index: 20;
+}
+#left-sidebar button {
+  display: block;
+  color: black;
+  border-bottom: 1px solid rgb(112, 112, 112);
+  padding: 7px 20px;
+  text-align: left;
+}
+.header-btns {
+  width: 100%;
+  font-size: 1.7rem;
+  box-shadow: 0px 3px 5px #a8aac925;
+}
+#left-sidebar .header-btns:hover, #left-sidebar-projects button:hover,
+#left-sidebar .header-btns:focus, #left-sidebar-projects button:focus   {
+  outline: none;
+  background-color: var(--red);
+  color: white;
+  font-weight: 600;
+}
+
+#projects-btn-container {
+  position: relative;
+}
+#add-project-btn {
+  position: absolute;
+  top: 15%;
+  right: 2.5%;
+  font-size: 2rem;
+  height: 70%;
+  width: 25px;
+  background-color: white;
+  background-image: url(../img/add-project.svg);
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: 80% 80%;
+  border-radius: 12px;
+  outline: 1px solid rgb(116, 116, 116);
+  
+}
+#add-project-btn:hover,
+#add-project-btn:focus {
+  background-color: #a8aac9;
+  box-shadow: 2px 2px 5px #7d84e29d;
+}
+
+#left-sidebar-projects button {
+  /* padding: 10px 20px; */
+  width: 100%;
+  font-size: 1.5rem;
+}
+
+
+
+
+#left-sidebar-projects {
+  position: sticky;
+  top: calc(var(--nav-bar-height) + 131px);
+  width: 100%;
+  height: calc(100vh - var(--nav-bar-height) - 141px);
+  background-color: white;
+  border: 1px solid black;
+  overflow-y: auto; /* Add vertical scrollbar if content overflows */
+}
+
+
+#left-sidebar-content button:hover,
+#left-sidebar-content button:focus  {
+  display: block;
+  color: black;
+  
+  padding: 10px 20px;
+  width: 100%;
+  font-size: 1.8rem;
+  text-align: left;
+  border-radius: 0px 0px 15px 0px;
+}
+
+
+
+#main-content {
+  background-color: #a8aac9;
+}
+
+#project-head {
+  position: sticky;
+  top: var(--nav-bar-height);
+  padding-top: 23px;
+  background-color: #a8aac9;
+}
+
+#project-title-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+#project-title {
+  font-size: 2.5rem;
+  width: 50%;
+  text-align: left;
+  margin-left: 30px;
+}
+#project-title-head h3 {
+  font-size: 1.8rem;
+  width: 50%;
+  font-weight: 500;
+  text-align: right;
+  margin-right: 50px;
+}
+
+#todo-head, .todo-list {
+  display: grid;
+  grid-template-columns: 4fr 1fr 1fr 1fr 50px;
+  margin: 0px 50px;
+}
+#todo-head {
+  border-bottom: 1px solid black;
+  font-size: 1.6rem;
+  margin-top: 20px;
+}
+
+.todo-list {
+  font-size: 1.5rem;
+  padding: 5px 0px;
+  height: 100vh;
+  overflow-y: auto; /* Add vertical scrollbar if content overflows */
+}
+

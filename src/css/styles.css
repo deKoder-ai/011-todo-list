@@ -19,9 +19,7 @@ body {
   background-color: rebeccapurple;
 }
 #content {
-  position: fixed;
-  top: var(--nav-bar-height);
-  left: 0px;
+  margin-top: var(--nav-bar-height);;
   width: 100%;
 }
 button {
@@ -31,3 +29,4 @@ button {
 button:hover {
   cursor: pointer;
 }
+

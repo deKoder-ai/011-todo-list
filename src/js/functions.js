@@ -34,5 +34,19 @@ function clearHTML(element) {
     element.innerHTML = '';
 }
 
+// get today's date
+function getDate() {
+    const today = new Date();
+    let day = today.getDate();
+    day = day.toString().padStart(2, '0');
+    let month = today.getMonth() + 1; // Months are 0-indexed, so add 1
+    month = month.toString().padStart(2, '0')
+    let year = today.getFullYear();
+    year = year.toString().slice(-2);
+    
+    const dateStr = `${day}/${month}/${year}`;
+    return dateStr;
+}
 
-export { newElement, createTable, clearHTML };
+
+export { newElement, createTable, clearHTML, getDate };
