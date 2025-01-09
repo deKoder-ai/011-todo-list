@@ -1,0 +1,42 @@
+<div class="form-container" id="nt-form">
+  <form action="" id="new-task-form">
+    <button type="button" class="close-form" id="close-nt-form"></button>
+    <div id="nt-input-container">
+      <div class="input-div nt-input-div">
+        <label for="new-task-name">Task:</label>
+        <input type="text"
+          name="new-task-name"
+          id="new-task-name"
+          placeholder="Task..."
+          required>
+      </div>
+      <p id="name-error">Please enter a task</p>
+      <div class="input-div nt-input-div">
+        <div class="flex-center">
+          <div class="nt-small-input">
+            <label for="new-task-due-date">Due Date:</label>
+            <input type="date"
+              name="new-task-due-date"
+              id="new-task-due-date">
+          </div>
+          <div class="nt-small-input">
+            <label for="new-task-priority" id="priority-label">Priority:</label>
+            <select id="new-task-priority" name="new-task-priority">
+              <option value="Critical">Critical</option>
+              <option value="High">High</option>
+              <option value="Medium" selected>Medium</option>
+              <option value="Low">Low</option>
+              <option value="Very Low">Very Low</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <p id="date-error">Please enter a due date</p>
+      <div class="input-div nt-input-div">
+        <label for="new-task-notes">Notes:</label>
+        <textarea rows="2" name="new-task-notes" id="new-task-notes"></textarea>
+      </div>
+    </div>
+    <button type="button" class="submit-form-btn" id="new-task-submit-btn">Add Project</button>
+  </form>
+</div>

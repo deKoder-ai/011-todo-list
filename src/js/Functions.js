@@ -44,8 +44,14 @@ const F = {
         return dateStr;
     },
     dateToUKStr(date) {
-        const split = date.split('-');
-        return `${split[2]}/${split[1]}/${split[0].slice(-2)}`;
+        if (date) {
+            const split = date.split('-');
+            return `${split[2]}/${split[1]}/${split[0].slice(-2)}`;
+        } else {
+            console.log('F.dateToUKStr(date): No date provided');
+            return undefined;
+        }
+        
     },
 }
 

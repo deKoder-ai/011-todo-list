@@ -4,7 +4,7 @@ import './css/reset.css';
 import './css/styles.css';
 import './css/nav.css';
 import { navBar } from './js/nav.js';
-import { todo } from './js/todo.js';
+import { Todo } from './js/Todo.js';
 import { F } from './js/Functions.js';
 import { Projects } from './js/Projects.js';
 // import odinImage from "./img/odin-lined.png";
@@ -26,14 +26,8 @@ document.addEventListener('DOMContentLoaded', function() {
   document.getElementById('content').innerHTML = homeHtml;
 
 
-  const k = todo.item('Name', 'Description', 'Due', 'Priority', 'Notes');
-  todo.addToDOM(k);
-
   // const pageContent = document.getElementById('content');
-  const projectTitle = document.getElementById('project-title');
-  const mainDueDate = document.getElementById('main-due-date');
-  projectTitle.innerText = Projects.today.name;
-  mainDueDate.innerText = Projects.today.dueDate;
+  Projects.displayProject(0);
 
   // click events
   const body = document.querySelector('body');
@@ -67,12 +61,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
           // projects events
           case 'today-btn':
-            projectTitle.innerText = Projects.today.name;
-            mainDueDate.innerText = Projects.today.dueDate;
+            Projects.displayProject(0);
             break;
           case 'daily-btn':
-            projectTitle.innerText = Projects.daily.name;
-            mainDueDate.innerText = Projects.daily.dueDate;
+            Projects.displayProject(1);
             break;
           case 'projects-btn':
             console.log('projects-btn');
@@ -85,18 +77,31 @@ document.addEventListener('DOMContentLoaded', function() {
             break;
           case 'new-project-submit-btn':
               e.preventDefault();
-              const newProjAdded = Projects.new();
-              console.log(newProjAdded);
-              // temp change name of project in main content
-              // will add function to change html and add todo list contents
-              const list = Projects.list;
-              if (newProjAdded) {
-                projectTitle.innerText = Projects.list[Projects.list.length - 1].name;
-                mainDueDate.innerText = F.dateToUKStr(Projects.list[Projects.list.length - 1].dueDate);
-              }
+              Projects.new();
               console.log(Projects.list);
             break;
 
+          case 'add-task-btn':
+            Todo.newForm();
+            break;
+          case 'close-nt-form':
+            Todo.closeNewForm();
+            break;
+          case 'new-task-submit-btn':
+            e.preventDefault();
+            Todo.new();
+            break;
+
+
+
+
+          case 'mask-page':
+            if (Projects.toggleNewForm === true) {
+              Projects.closeNewForm();
+            } else if (Todo.toggleNewForm === true) {
+              Todo.closeNewForm();
+            }
+            break;
           default:
             if (navBar.dropdownToggle === true) {
               navBar.closeDropdownMenu();
@@ -114,12 +119,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
 });
 
-document.addEventListener('keydown', function(event) {
-  if (event.key === 'Escape') {
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
     if (navBar.dropdownToggle === true) {
       navBar.closeDropdownMenu();
-    } else if (Projects.toggleNewProjectForm === true) {
+    } else if (Projects.toggleNewForm === true) {
       Projects.closeNewForm();
+    } else if (Todo.toggleNewForm === true) {
+      Todo.closeNewForm();
     }
   } else if (event.key === '+') {
     Projects.newForm();

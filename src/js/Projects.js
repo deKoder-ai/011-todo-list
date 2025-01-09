@@ -1,21 +1,24 @@
 import { F } from './Functions.js';
 import newProjectForm from '../html/newProjectForm.html';
+import { Todo } from './Todo.js';
 
 const Projects = {
-  today: {
-    name: 'Today',
-    dueDate: F.getDate(),
-    todoList: []
-  },
-  daily: {
-    name: 'Daily',
-    dueDate: F.getDate(),
-    todoList: []
-  },
+  current: 0,
+  // today: {
+  //   name: 'Today',
+  //   dueDate: F.getDate(),
+  //   todoList: []
+  // },
+  // daily: {
+  //   name: 'Daily',
+  //   dueDate: F.getDate(),
+  //   todoList: []
+  // },
   list: [
-
+    {name: 'Today', dueDate: F.getDate(), todoList: []},
+    {name: 'Daily', dueDate: F.getDate(), todoList: []}
   ],
-  toggleNewProjectForm: false,
+  toggleNewForm: false,
   newForm() {
     const mask = document.getElementById('mask-page');
     mask.style.display = 'block';
@@ -23,29 +26,32 @@ const Projects = {
     const container = F.newElement('div', newProjectForm, '', 'temp');
     mainContent.appendChild(container);
     document.getElementById('new-project-name').focus();
-    this.toggleNewProjectForm = true;
+    this.toggleNewForm = true;
   },
   closeNewForm() {
     document.getElementById('new-project-form').reset();
     document.getElementById('temp').remove();
     const maskPage = document.getElementById('mask-page');
     maskPage.style.display = 'none';
-    this.toggleNewProjectForm = false;
+    this.toggleNewForm = false;
   },
   new() {
     const errorMsg = document.querySelector('.form-error');
     const nameInput = document.getElementById('new-project-name');
     const dateInput = document.getElementById('new-project-due-date');
     const name = nameInput.value;
-    const dueDate = dateInput.value;
+    const dueDate = F.dateToUKStr(dateInput.value);
+    console.log(dueDate);
     // add project if form complete
     if (name !== '' && dueDate) {
       const newProject = {
-        name: name,
-        dueDate: dueDate,
+        name,
+        dueDate,
         todoList: []
       }
+      this.current = name;
       this.list.push(newProject);
+      this.current = this.list.length - 1;
       this.createNewProjectBtn();
       this.closeNewForm();
       return true;
@@ -82,7 +88,8 @@ const Projects = {
     const newItem = this.list[this.list.length - 1];
     if (newItem.name && newItem.dueDate) {
       const id = this.list.length - 1;
-      const date = F.dateToUKStr(newItem.dueDate);
+      this.displayProject(id);
+      const date = newItem.dueDate;
       const btnDiv = F.newElement('div', '', ['project-btn'], `project-btn-div-${id}`);
       const nameP = F.newElement('p', `- ${newItem.name}`);
       const dateP = F.newElement('p', `${date}`);
@@ -108,6 +115,10 @@ const Projects = {
           dateP.style.color = 'initial';
           dateP.style.fontWeight = 'initial';
         });
+        newItemBtn.addEventListener('click', function() {
+          Projects.current = id;
+          Projects.displayProject(id);
+        });
       btnDiv.appendChild(nameP);
       btnDiv.appendChild(dateP);
       btnDiv.appendChild(newItemBtn);
@@ -115,7 +126,18 @@ const Projects = {
       projectsList.appendChild(btnDiv);  
     }
   },
-
+  displayProject(id) {
+    const projectTitle = document.getElementById('project-title');
+    const mainDueDate = document.getElementById('main-due-date');
+    projectTitle.innerText = this.list[id].name;
+    mainDueDate.innerText = this.list[id].dueDate;
+    const todoListHtml = document.getElementById('todo-list');
+    todoListHtml.innerHTML = '';
+    const todoList = this.list[this.current].todoList;
+    for (const item of todoList) {
+      Todo.appendTask(item);
+    }
+  }
 }
 
 export { Projects }

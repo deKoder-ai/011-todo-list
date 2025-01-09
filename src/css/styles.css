@@ -1,9 +1,10 @@
 /* * { outline: 1px dashed blue; } */
-@font-face {
+
+/* @font-face {
   font-family: topsecret;
   src: url('../fonts/top-secret.ttf');
   font-style: normal;
-}
+} */
 
 :root {
   --nav-bar-height: 5rem;
@@ -39,4 +40,5 @@ button:hover {
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.795);
   z-index: 20000;
+  overflow-y: auto;
 }

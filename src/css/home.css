@@ -142,13 +142,16 @@
   text-align: right;
   margin-right: 50px;
 }
+#priority-head {
+  text-align: center;
+}
 #project-title, #project-title-head h3 {
   text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.575);
 }
 
 #todo-head, .todo-item {
   display: grid;
-  grid-template-columns: 4fr 1fr 1fr 1fr 50px;
+  grid-template-columns: 4fr 0.7fr 0.9fr 1.5fr 50px;
   margin: 0px 50px;
 }
 #todo-head {
@@ -179,7 +182,7 @@
   outline: 2px solid rgba(0, 0, 0, 0.664);
 }
 
-.todo-list {
+#todo-list {
   font-size: 1.5rem;
   padding: 5px 0px;
   height: 50vh;
@@ -201,15 +204,21 @@
   color: black;
   box-shadow: 7px 7px 15px rgba(0, 0, 0, 0.767);
 }
-.input-container {
+#np-form {
+  top: 200px;
+}
+#nt-form {
+  top: 123px;
+}
+#np-input-container {
   display: flex;
   justify-content: flex-start;
   align-items: center;
 }
-.input-div {
+.np-input-div {
   padding: 20px;
 }
-.input-div input {
+.np-input-div input {
   display: block;
   width: 300px;
   margin: 2px 0px 5px 0px;
@@ -224,7 +233,7 @@
   text-align: right;
   padding-right: 10px;
 }
-#new-project-submit-btn {
+.submit-form-btn {
   color: black;
   position: relative;
   top: -5px;
@@ -237,14 +246,14 @@
   border-radius: 20px;
   box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.267);
 }
-#new-project-submit-btn:hover,
-#new-project-submit-btn:focus {
+.submit-form-btn:hover,
+.submit-form-btn:focus {
   background-color: var(--red);
   color: white;
   font-weight: 600;
   box-shadow: 5px 5px 7px rgba(0, 0, 0, 0.267);
 }
-#close-np-form {
+.close-form {
   position: absolute;
   top: 7px;
   right: 10px;
@@ -256,8 +265,8 @@
   background-size: 120%;
   border-radius: 50px;
 }
-#close-np-form:hover,
-#close-np-form:focus {
+.close-form:hover,
+.close-form:focus {
   height: 29px;
   width: 29px;
   background-color: var(--red);
@@ -271,3 +280,149 @@
   font-size: 1.6rem;
   margin: -2px 0px 23px 0px;
 }
+
+.nt-input-div {
+  padding: 20px 20px 0px 20px;
+}
+.nt-input-div input {
+  display: block;
+  width: 500px;
+  margin: 2px 0px 5px 0px;
+}
+.flex-center {
+  display: flex;
+  justify-content: space-between;
+
+}
+.nt-small-input {
+  width: 250px;
+}
+.nt-small-input input {
+  width: 240px;
+}
+#priority-label {
+  margin-left: 10px;
+}
+.nt-small-input select {
+  display: block;
+  width: 240px;
+  margin-left: 10px;
+  background-color: white;
+  outline: 1px solid black;
+  border-radius: 7px;
+  margin-top: 2px;
+  padding: 5px 7px;
+  font-size: 1.5rem;
+}
+.nt-input-div textarea {
+  width: 100%;
+  outline: 1px solid black;
+  border-radius: 7px;
+  display: block;
+  resize: vertical;
+  padding: 5px 15px;
+  font-size: 1.5rem;
+  margin-bottom: 23px;
+  max-height: 170px;
+  min-height: 6.2rem;
+}
+
+#name-error {
+  display: none;
+  width: 100%;
+  text-align: center;
+  color: var(--red);
+  font-size: 1.6rem;
+  margin: 15px 0px -15px 0px;
+}
+#date-error {
+  display: none;
+  width: 100%;
+  text-align: center;
+  color: var(--red);
+  font-size: 1.6rem;
+  margin: 15px 0px -30px 0px;
+}
+
+.todo-item {
+  padding: 3px 0px;
+  font-size: 1.5rem;
+}
+
+.todo-task-div {
+  width: 100%;
+  position: relative;
+  height: 30px;
+}
+.todo-task {
+  text-align: left;
+  padding-left: 5px;
+  width: 100%;
+}
+.todo-task-edit {
+  display: none;
+  width: 97%;
+  padding: 1px 7px;
+  outline: 1px solid black;
+  border-radius: 7px;
+}
+
+.todo-date {
+  font-size: 1.6rem;
+  text-align: center;
+  /* padding-right: 5px; */
+  width: 100%;
+}
+
+
+
+.todo-priority {
+  font-size: 1.6rem;
+  text-align: center;
+  width: 100%;
+  /* padding-right: 15px; */
+}
+
+.todo-priority-div {
+  width: 100%;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.todo-priority {
+  font-size: 1.6rem;
+  text-align: center;
+  width: 100%;
+  /* padding-right: 15px; */
+}
+.todo-priority-edit {
+  margin-top: 2px;
+  display: none;
+  width: 85%;
+  /* margin-left: 7.5%; */
+  padding: 0px 7px;
+  outline: 1px solid black;
+  border-radius: 7px;
+  font-size: 1.5rem;
+  /* text-align: center; */
+}
+
+
+.todo-notes {
+  text-align: left;
+  /* padding-left: 5px; */
+  max-width: 100%;
+  overflow: hidden;
+}
+.todo-check-div {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.todo-check {
+  width: 30px;
+  height: 20px;
+}
+
