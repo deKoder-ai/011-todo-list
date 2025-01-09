@@ -1,26 +1,26 @@
 'use-strict'
-import { newElement } from './functions.js';
+import { F } from './Functions.js';
 
 const navBar = {
   navBar: document.getElementById('nav-bar'),
-  homeBtn: newElement('button', 'Home', '' ,'home-btn'),
-  gap: newElement('div'),
+  homeBtn: F.newElement('button', 'Home', '' ,'home-btn'),
+  gap: F.newElement('div'),
   buttons: [
-    newElement('button', 'About', ['nav-bar-btn'], 'nav-btn-1'),
-    newElement('button', 'Link 2', ['nav-bar-btn'], 'nav-btn-2'),
-    newElement('button', 'Link 3', ['nav-bar-btn'], 'nav-btn-3'),
+    F.newElement('button', 'About', ['nav-bar-btn'], 'nav-btn-1'),
+    F.newElement('button', 'Link 2', ['nav-bar-btn'], 'nav-btn-2'),
+    F.newElement('button', 'Link 3', ['nav-bar-btn'], 'nav-btn-3'),
   ],
-  dropdownBtn: newElement('button', '', '', 'dropdown-btn'),
-  dropdownMenu: newElement('div', '', '', 'dropdown-menu'),
+  dropdownBtn: F.newElement('button', '', '', 'dropdown-btn'),
+  dropdownMenu: F.newElement('div', '', '', 'dropdown-menu'),
   dropdownItems: [
-    newElement('button', 'Link 1', ['dropdown-items'], 'dropdown-item-1'),
-    newElement('div', '', ['dropdown-separator']),
-    newElement('button', 'Link 2', ['dropdown-items'], 'dropdown-item-2'),
-    newElement('div', '', ['dropdown-separator']),
-    newElement('button', 'Link 3', ['dropdown-items'], 'dropdown-item-3'),
-    newElement('div', '', ['dropdown-separator']),
-    newElement('button', 'Link 4', ['dropdown-items'], 'dropdown-item-4'),
-    newElement('div', '', ['dropdown-separator']),
+    F.newElement('button', 'Link 1', ['dropdown-items'], 'dropdown-item-1'),
+    F.newElement('div', '', ['dropdown-separator']),
+    F.newElement('button', 'Link 2', ['dropdown-items'], 'dropdown-item-2'),
+    F.newElement('div', '', ['dropdown-separator']),
+    F.newElement('button', 'Link 3', ['dropdown-items'], 'dropdown-item-3'),
+    F.newElement('div', '', ['dropdown-separator']),
+    F.newElement('button', 'Link 4', ['dropdown-items'], 'dropdown-item-4'),
+    F.newElement('div', '', ['dropdown-separator']),
   ],
   dropdownToggle: false,
   openDropdownMenu: function() {

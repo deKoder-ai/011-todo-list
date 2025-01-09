@@ -5,7 +5,7 @@ import './css/styles.css';
 import './css/nav.css';
 import { navBar } from './js/nav.js';
 import { todo } from './js/todo.js';
-import { getDate } from './js/functions.js';
+import { F } from './js/Functions.js';
 import { Projects } from './js/Projects.js';
 // import odinImage from "./img/odin-lined.png";
 
@@ -22,7 +22,10 @@ const contentDiv = document.getElementById('content');
 
 document.addEventListener('DOMContentLoaded', function() {
 
+  // fill content element with homeHtml - this will be done conditionally later
   document.getElementById('content').innerHTML = homeHtml;
+
+
   const k = todo.item('Name', 'Description', 'Due', 'Priority', 'Notes');
   todo.addToDOM(k);
 
@@ -62,7 +65,7 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('Nav Link 4');
             break;
 
-          //
+          // projects events
           case 'today-btn':
             projectTitle.innerText = Projects.today.name;
             mainDueDate.innerText = Projects.today.dueDate;
@@ -82,10 +85,15 @@ document.addEventListener('DOMContentLoaded', function() {
             break;
           case 'new-project-submit-btn':
               e.preventDefault();
-              Projects.new();
-              Projects.closeNewForm();
-              projectTitle.innerText = Projects.list[Projects.list.length - 1].name;
-              mainDueDate.innerText = Projects.formatDate(Projects.list[Projects.list.length - 1].dueDate);
+              const newProjAdded = Projects.new();
+              console.log(newProjAdded);
+              // temp change name of project in main content
+              // will add function to change html and add todo list contents
+              const list = Projects.list;
+              if (newProjAdded) {
+                projectTitle.innerText = Projects.list[Projects.list.length - 1].name;
+                mainDueDate.innerText = F.dateToUKStr(Projects.list[Projects.list.length - 1].dueDate);
+              }
               console.log(Projects.list);
             break;
 
@@ -105,13 +113,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 });
-
-
-
-
-
-
-
 
 document.addEventListener('keydown', function(event) {
   if (event.key === 'Escape') {

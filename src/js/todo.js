@@ -1,4 +1,4 @@
-import { newElement } from "./functions";
+import { F } from "./Functions";
 
 const todo = {
   item(task, due, priority, notes) {
@@ -14,10 +14,10 @@ const todo = {
   },
   addToDOM(todoItem) {
     console.log('addtoDOM');
-    const todoList = newElement('div', '', ['todo-list']);
+    const todoList = F.newElement('div', '', ['todo-list']);
     const mainContent = document.getElementById('main-content');
     for (const item of todoItem) {
-      const x = newElement('p', item);
+      const x = F.newElement('p', item);
       todoList.appendChild(x);
     }
     mainContent.appendChild(todoList);
