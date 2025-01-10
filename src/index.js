@@ -7,12 +7,19 @@ import { navBar } from './js/nav.js';
 import { Todo } from './js/Todo.js';
 import { F } from './js/Functions.js';
 import { Projects } from './js/Projects.js';
+// import { todoEdit } from './js/xx.js';
 // import odinImage from "./img/odin-lined.png";
+
+import { todoEdits } from './js/todoEdits.js';
 
 import homeHtml from './html/home.html';
 import homeCss from './css/home.css';
 
+const logClickedElement = 0; // 0 - no log | 1 - log element
+
 navBar.addToDOM();
+
+
 
 const contentDiv = document.getElementById('content');
 
@@ -22,18 +29,25 @@ const contentDiv = document.getElementById('content');
 
 document.addEventListener('DOMContentLoaded', function() {
 
+  
+  
+
   // fill content element with homeHtml - this will be done conditionally later
   document.getElementById('content').innerHTML = homeHtml;
+
+  
 
 
   // const pageContent = document.getElementById('content');
   Projects.displayProject(0);
+  
+  todoEdits.events();
 
   // click events
   const body = document.querySelector('body');
   body.addEventListener('click', function(e) {
       const target = e.target;
-      console.log(target);
+      if (logClickedElement) {console.log(target)};
       switch(target.id) {
         // navigation events
           case 'dropdown-btn':
