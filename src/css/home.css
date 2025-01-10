@@ -264,6 +264,7 @@
   background-position: center center;
   background-size: 120%;
   border-radius: 50px;
+  z-index: 50001;
 }
 .close-form:hover,
 .close-form:focus {
@@ -431,7 +432,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 .todo-notes {
   text-align: left;
-  /* padding-left: 5px; */
+  padding-top: 0.2rem;
   max-width: 100%;
   overflow: hidden;
 }
@@ -473,5 +474,71 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 #edit-instructions p {
   width: 100%;
   text-align: center;
-  font-size: 1.7rem;
+  font-size: 1.5rem;
+}
+
+#edit-note {
+  display: block;
+  position: absolute;
+  top: 4.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 55rem;
+  outline: 2px solid black;
+  background-color: white;
+  z-index: 10000;
+  color: black;
+  padding: 0rem 1.5rem;
+  border-radius: 7px;
+}
+#edit-note-header {
+  position: sticky;
+  top: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1.6rem;
+  padding-top: 0.7rem;
+  padding-bottom: 0.5rem;
+  background-color: white;
+}
+#edit-note-textarea {
+  width: 100%;
+  height: 250px;
+  overflow-y: auto;
+  border: 1px solid black;
+  resize: none;
+  font-size: 1.4rem;
+  padding: 0.7rem 1.4rem;
+}
+#edit-note-footer {
+  position: sticky;
+  top: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1.4rem;
+  padding-top: 0.7rem;
+  padding-bottom: 0.5rem;
+  background-color: white;
+  margin-top: -0.5rem;
+}
+
+#notes-edit-submit {
+  background-color: white;
+  outline: 2px solid black;
+  color: black;
+  font-size: 1.6rem;
+  padding: 0.15rem 3.5rem;
+  margin-top: -0.2rem;
+  margin-bottom: 0.3rem;
+  border-radius: 15px;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.603);
+}
+#notes-edit-submit:hover,
+#notes-edit-submit:focus {
+  background-color: var(--red);
+  color: white;
+  font-weight: 600;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.719);
 }

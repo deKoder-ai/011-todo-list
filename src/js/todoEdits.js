@@ -1,5 +1,6 @@
 import { Projects } from "./Projects";
 import { F } from "./Functions";
+import noteEditHtml from '../html/notesEdit.html';
 
 
 const todoEdits = {
@@ -17,7 +18,6 @@ const todoEdits = {
     } else {
       instructions.style.display = 'none'
     };
-    console.log(`Instru ${show}`);
   },
   setEditProjInfo(idSplit) {
     this.projId = Number(idSplit[2]);
@@ -27,8 +27,8 @@ const todoEdits = {
     console.log(`Project: ${this.currentProj.name} | Task ID: ${this.taskId} | Data: ${this.taskItemKey}`);
   },
   getEditElements(id) {
-    todoEdits.tdiInfo = document.getElementById(id);
-    todoEdits.tdiEdit = document.getElementById(id + '-edit');
+    this.tdiInfo = document.getElementById(id);
+    this.tdiEdit = document.getElementById(id + '-edit');
   },
   events() {
     const todoListDiv = document.getElementById('todo-list')
@@ -39,7 +39,6 @@ const todoEdits = {
       if (!todoEdits.editing && idSplit[0] === 'tdi') {
         todoEdits.setEditProjInfo(idSplit);
         
-
         switch(todoEdits.taskItemKey) {
           case 'task':
             todoEdits.showInstructions(true);
@@ -57,6 +56,7 @@ const todoEdits = {
             todoEdits.tdiEdit.addEventListener('keydown', function(e) {
               todoEdits.handleKeyPress(e);
             });
+            break;
           case 'priority':
             todoEdits.showInstructions(true);
             todoEdits.getEditElements(id);
@@ -64,26 +64,69 @@ const todoEdits = {
             todoEdits.tdiEdit.addEventListener('keydown', function(e) {
               todoEdits.handleKeyPress(e);
             });
-          case 'done':
-            // todoEdits.showInstructions(false);
-            todoEdits.updateDone(id);
+            break;
+
+
+          case 'notes':
+            todoEdits.tdiInfo = document.getElementById(id);
+            // todoEdits.switchToEditDisplay();
+            // todoEdits.tdiEdit.style.display = 'block';
+            todoEdits.editing = true;
+
+            const todoHeadDiv = document.getElementById('todo-head');
+            const editNoteDiv = F.newElement('div', '', '', 'edit-note');
+            editNoteDiv.innerHTML = noteEditHtml;
+            todoHeadDiv.appendChild(editNoteDiv);
+            const closeNoteEditBtn = document.getElementById('close-notes-edit');
+            const notesTaskSpan = document.getElementById('edit-note-task-span');
+            const notesDateSpan = document.getElementById('edit-note-date-span');
+            const notesPrioritySpan = document.getElementById('edit-note-priority-span');
+            const notesTextarea = document.getElementById('edit-note-textarea');
+            notesTextarea.focus();
+            // fill note edit window spans
+            const task = todoEdits.currentProj.todoList[todoEdits.taskId].task;
+            notesTaskSpan.innerText = task;
+            const dueDate = todoEdits.currentProj.todoList[todoEdits.taskId].dueDate;
+            notesDateSpan.innerText = dueDate;
+            const priority = todoEdits.currentProj.todoList[todoEdits.taskId].priority;
+            notesPrioritySpan.innerText = priority;
+            const notes = todoEdits.currentProj.todoList[todoEdits.taskId].notes;
+            notesTextarea.defaultValue = notes;
+            // handle events
+            closeNoteEditBtn.addEventListener('click', function(e) {
+              editNoteDiv.remove();
+              todoEdits.editing = false;
+            });
+            editNoteDiv.addEventListener('keydown', function(e) {
+              if (e.key === 'Escape') {
+                editNoteDiv.remove();
+                todoEdits.editing = false;
+              } 
+            });
+            const editBtn = document.getElementById('notes-edit-submit');
+            editBtn.addEventListener('click', function(e) {
+              let newValue = notesTextarea.value;
+              todoEdits.updateTodoListData(newValue);
+              todoEdits.tdiInfo.innerHTML = F.reduceString(newValue, 20);
+              todoEdits.editing = false;
+              editNoteDiv.remove();
+            })
+
             
-            // console.log(checkbox.checked);
-            // console.log('checkbox');
 
 
+
+
+            break;
+
+          case 'done':
+            todoEdits.updateDone(id);
             break;
           default:
 
             break;
         }
 
-      
-      // switch(target.id) {
-      //   case 'dropdown-item-1':
-      //     console.log('Nav Link 1');
-      //     break;
-      // }
       }
     });
   },
