@@ -15,7 +15,7 @@ import { todoEdits } from './js/todoEdits.js';
 import homeHtml from './html/home.html';
 import homeCss from './css/home.css';
 
-const logClickedElement = 1; // 0 - no log | 1 - log element
+const logClickedElement = 0; // 0 - no log | 1 - log element
 
 navBar.addToDOM();
 
@@ -27,14 +27,63 @@ const contentDiv = document.getElementById('content');
 // image.src = odinImage;
 // contentDiv.appendChild(image);
 
+
+
 document.addEventListener('DOMContentLoaded', function() {
 
-  
-  
+  //check if local storage available
+  F.checkLocalStorageAvailability();
+
+  // set Projects.list to projectsList stored in localstorage
+  const loadProjects = F.getLocalStorageItem('projectsList');
+  if (loadProjects) { Projects.list = loadProjects };
+  console.log(`Projects List :`);
+  console.log(Projects.list);
+  const loadUndoHistory = F.getLocalStorageItem('undoHistory');
+  if (loadUndoHistory) { Projects.undoHistory = loadUndoHistory};
+  console.log(`Undo History: `)
+  console.log(Projects.undoHistory);
+  console.log(F.getLocalStorageKeys());
+
+  function manageUndoLength(maxLength) {
+    if (Projects.undoHistory.length > (maxLength)) {
+      Projects.undoHistory.shift();
+      manageUndoLength(maxLength);
+    }
+    F.writeToLocalStorage('undoHistory', Projects.undoHistory);
+  }
+
+  manageUndoLength(20);
+
+  let ctrl = false;
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Control') {
+        ctrl = true;
+    }
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'z' && ctrl === true) {
+        console.log('Undo time');
+        Projects.list = Projects.undoHistory.pop();
+        F.writeToLocalStorage('undoHistory', Projects.undoHistory);
+        F.writeToLocalStorage('projectsList', Projects.list);
+        window.location.reload(true);
+    }
+  });
+
+
+
 
   // fill content element with homeHtml - this will be done conditionally later
   document.getElementById('content').innerHTML = homeHtml;
 
+  Projects.updateCount();
+  // initialise projects button list from local storage
+  for (let i = 2; i < Projects.list.length; i++) {
+    Projects.createNewBtn(Projects.list[i], i);
+  }
+
+  Projects.delete();
   
 
 
@@ -92,7 +141,7 @@ document.addEventListener('DOMContentLoaded', function() {
           case 'new-project-submit-btn':
               e.preventDefault();
               Projects.new();
-              console.log(Projects.list);
+              // console.log(Projects.list);
             break;
           
           // add tasks to project

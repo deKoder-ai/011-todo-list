@@ -4,25 +4,20 @@ import { Todo } from './Todo.js';
 
 const Projects = {
   currentProjId: 0,
-  // today: {
-  //   name: 'Today',
-  //   dueDate: F.getDate(),
-  //   todoList: []
-  // },
-  // daily: {
-  //   name: 'Daily',
-  //   dueDate: F.getDate(),
-  //   todoList: []
-  // },
   list: [
     {name: 'Today', dueDate: F.getDate(), todoList: []},
     {name: 'Daily', dueDate: F.getDate(), todoList: []}
   ],
   toggleNewForm: false,
   mask: undefined,
+  updateCount() {
+    const projectsBtn = document.getElementById('projects-btn');
+    let count = 0;
+    if (this.list.length > 2) { count = this.list.length - 2}
+    projectsBtn.innerText = `Projects - ${count}`;
+  },
   addMaskToDOM() {
     const content = document.getElementById('content');
-    console.log(content);
     this.mask = F.newElement('div', '', ['mask-bcg'], 'mask-bcg');
     this.mask.addEventListener('click', function(e) {
       if (e.target.id === 'mask-bcg') {
@@ -34,7 +29,6 @@ const Projects = {
   removeMask() {
     this.mask.remove();
     this.mask = undefined;
-    console.log(this.mask);
   },
   newForm() {
     // const mask = document.getElementById('mask-page');
@@ -51,6 +45,7 @@ const Projects = {
     document.getElementById('temp').remove();
     // const maskPage = document.getElementById('mask-page');
     // maskPage.style.display = 'none';
+    console.log(this.mask);
     this.removeMask();
     this.toggleNewForm = false;
   },
@@ -60,7 +55,6 @@ const Projects = {
     const dateInput = document.getElementById('new-project-due-date');
     const name = nameInput.value;
     const dueDate = F.dateToUKStr(dateInput.value);
-    console.log(dueDate);
     // add project if form complete
     if (name !== '' && dueDate) {
       const newProject = {
@@ -71,8 +65,12 @@ const Projects = {
       this.currentProjId = name;
       this.list.push(newProject);
       this.currentProjId = this.list.length - 1;
-      this.createNewProjectBtn();
+      this.displayProject(this.currentProjId);
+      this.createNewBtn(this.list[this.currentProjId], this.currentProjId);
       this.closeNewForm();
+      F.writeToLocalStorage('projectsList', Projects.list);
+      this.updateCount();
+      // console.log(`Stored Projects: ${F.getLocalStorageItem('projectsList')}`);
       return true;
     } else { // else handle input errors
       if (!name && !dueDate) {
@@ -103,47 +101,39 @@ const Projects = {
       }
     });
   },
-  createNewProjectBtn() {
-    const newItem = this.list[this.list.length - 1];
-    if (newItem.name && newItem.dueDate) {
-      const id = this.list.length - 1;
-      this.displayProject(id);
-      const date = newItem.dueDate;
-      const btnDiv = F.newElement('div', '', ['project-btn'], `project-btn-div-${id}`);
-      const nameP = F.newElement('p', `- ${newItem.name}`);
-      const dateP = F.newElement('p', `${date}`);
-        dateP.style.fontSize = '1.2rem';
-        dateP.style.paddingTop = '2px';
-      const newItemBtn = F.newElement('button', '', '', `project-btn-${id}`);
-        newItemBtn.style.position = 'absolute';
-        newItemBtn.style.top = '0';
-        newItemBtn.style.left = '1px';
-        newItemBtn.style.width = '100%';
-        newItemBtn.style.height = '100%';
-        newItemBtn.addEventListener('mouseenter', function() {
-          btnDiv.style.backgroundColor = "var(--red)";
-          nameP.style.color = '#ffffff';
-          nameP.style.fontWeight = '600';
-          dateP.style.color = '#ffffff';
-          dateP.style.fontWeight = '600';
-        });
-        newItemBtn.addEventListener('mouseleave', function() {
-          btnDiv.style.backgroundColor = "initial"; // or any other default color
-          nameP.style.color = 'initial';
-          nameP.style.fontWeight = 'initial';
-          dateP.style.color = 'initial';
-          dateP.style.fontWeight = 'initial';
-        });
-        newItemBtn.addEventListener('click', function() {
-          Projects.currentProjId = id;
-          Projects.displayProject(id);
-        });
+  createNewBtn(project, id) {
+    if (project.name && project.dueDate) {
+      const date = project.dueDate;
+      const btnDiv = F.newElement('div', '', ['project-btn-div'], `project-btn-div-${id}`);
+      const appendProjName = F.reduceString(project.name, 14);
+      const nameP = F.newElement('p', `- ${appendProjName}`);
+      const dateP = F.newElement('p', `${date}`, ['project-btn-date-p']);
+      const newItemBtn = F.newElement('button', '', ['project-btn'], `project-btn-${id}`);
+      const components = [btnDiv, nameP, dateP];
+      this.addBtnEvents(newItemBtn, components, id);
       btnDiv.appendChild(nameP);
       btnDiv.appendChild(dateP);
       btnDiv.appendChild(newItemBtn);
       const projectsList = document.getElementById('left-sidebar-projects');
       projectsList.appendChild(btnDiv);  
     }
+  },
+  addBtnEvents(button, components, id) {
+    button.addEventListener('mouseenter', function() {
+      for (let comp of components) { comp.classList.add('project-btn-hover'); }
+    });
+    button.addEventListener('mouseleave', function() {
+      for (let comp of components) { comp.classList.remove('project-btn-hover'); }
+    });
+    button.addEventListener('click', function(e) {
+      Projects.currentProjId = id;
+      Projects.displayProject(id);
+      console.log(Projects.list[id]);
+    });
+    // button.addEventListener('contextmenu', (event) => {
+    //   console.log("🖱 right click detected!");
+    //   event.preventDefault(); // Prevents the default context menu from appearing
+    // });
   },
   displayProject(id) {
     this.currentProjId = id;
@@ -153,12 +143,69 @@ const Projects = {
     mainDueDate.innerText = this.list[id].dueDate;
     const todoListHtml = document.getElementById('todo-list');
     todoListHtml.innerHTML = '';
-    console.log(this.currentProjId);
     const todoList = this.list[this.currentProjId].todoList;
     for (const item of todoList) {
       Todo.appendTaskToDOM(item);
     }
-  }
+  },
+
+
+  delete() {
+    let ctrlPressed = false;
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Control') {
+          ctrlPressed = true;
+      }
+    });
+    document.addEventListener('keyup', function(e) {
+      if (e.key === 'Control') {
+          ctrlPressed = false;
+      }
+    });
+    // Capture clicks on a specific element
+    document.getElementById('left-sidebar-projects').addEventListener('click', function(e) {
+      if (ctrlPressed) {
+          console.log('Control+Click detected');
+
+          Projects.mask = F.newElement('div', '', ['mask-bcg'], 'mask-bcg');
+
+          // close mask and delete button
+          Projects.mask.addEventListener('click', function(e) {
+            if (e.target.id === 'mask-bcg') {
+              console.log('killdembugs');
+              Projects.mask.remove();
+              Projects.mask = undefined;
+            }
+          });
+          document.body.appendChild(Projects.mask);
+
+          const clickId = e.target.id;
+          const idSplit = clickId.split('-');
+          const projectIndex = idSplit[2]
+          const project = Projects.list[projectIndex];
+          const parentId = `${idSplit[0]}-${idSplit[1]}-div-${idSplit[2]}`;
+          let projectBtn = document.getElementById(parentId);
+
+          const delBtnText = `Delete Project: ${F.reduceString(project.name, 15)}`;
+          const delProjBtn = F.newElement('button', delBtnText, '', 'del-proj-btn');
+          Projects.mask.appendChild(delProjBtn);
+          delProjBtn.addEventListener('click', function(e) {
+            Projects.undoHistory.push(Projects.list);
+            F.writeToLocalStorage('undoHistory', Projects.undoHistory);
+            projectBtn.remove();
+            projectBtn = undefined;
+            Projects.list.splice(projectIndex, 1);
+            Projects.mask.remove();
+            Projects.mask = undefined;
+            F.writeToLocalStorage('projectsList', Projects.list);
+            window.location.reload(true);
+          })
+      }
+    });
+  },
+  undoHistory: [
+
+  ],
 }
 
 export { Projects }

@@ -54,9 +54,66 @@ const F = {
   },
   reduceString(str, len) {
     if (str.length > len) {
-      str = `${str.slice(0, len)}...`
+      return `${str.slice(0, len)}...`
+    } else {
+      return str;
     }
-    return str;
+    
+  },
+  storageAvailable(type) {
+    let storage;
+    try {
+      storage = window[type];
+      const x = "__storage_test__";
+      storage.setItem(x, x);
+      storage.removeItem(x);
+      return true;
+    } catch (e) {
+      return (
+        e instanceof DOMException &&
+        e.name === "QuotaExceededError" &&
+        // acknowledge QuotaExceededError only if there's something already stored
+        storage &&
+        storage.length !== 0
+      );
+    }
+  },
+  checkLocalStorageAvailability() {
+    if (this.storageAvailable('localStorage')) {
+      console.log('Local storage is available');
+    } else {
+      console.log('Error: Local storage is not available');
+    }
+  },
+  checkSessionStorageAvailability() {
+    if (this.storageAvailable('sessionStorage')) {
+      console.log('Session storage is available');
+    } else {
+      console.log('Error: Session storage is not available');
+    }
+  },
+  writeToLocalStorage(key, data) {
+    const jsonData = JSON.stringify(data);
+    localStorage.setItem(String(key), jsonData);
+  },
+  getLocalStorageItem(key) {
+    const item = localStorage.getItem(String(key));
+    if (item) {
+      return JSON.parse(item);
+    } else {
+      console.log(`No data in key: ${key}`)
+    }
+  },
+  getLocalStorageKeys() {
+    const keys = Object.keys(localStorage);
+    if (keys) {
+      for (let key of keys) {
+        console.log(`LS Key: ${key}`);
+      }
+    } else {
+      console.log('Local storage is empty');
+    }
+    console.log(`Storage length: ${localStorage.length}`);
   },
 }
 

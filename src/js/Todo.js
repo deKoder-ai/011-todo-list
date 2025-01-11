@@ -28,7 +28,6 @@ const Todo = {
   removeMask() {
     this.mask.remove();
     this.mask = undefined;
-    console.log(this.mask);
   },
   newForm() {
     // const mask = document.getElementById('mask-page');
@@ -68,7 +67,7 @@ const Todo = {
       }
       const id = Projects.currentProjId;
       Projects.list[id].todoList.push(newTask);
-
+      F.writeToLocalStorage('projectsList', Projects.list);
       this.appendTaskToDOM(newTask);
       this.closeNewForm();
       return true;
@@ -112,7 +111,7 @@ const Todo = {
     // fill content
     const divChildren = html.div.children;
 
-    divChildren[0].children[0].innerHTML = task.task;
+    divChildren[0].children[0].innerHTML = F.reduceString(task.task, 60);
     divChildren[0].children[0].id = `tdi-proj-${projId}-todo-${todoId}-task`;
     divChildren[0].children[1].value = task.task;
     divChildren[0].children[1].id = `tdi-proj-${projId}-todo-${todoId}-task-edit`;
@@ -139,8 +138,7 @@ const Todo = {
       notesDisplayStr = F.reduceString(task.notes, 20);
     }
 
-    console.log(task.notes);
-    // divChildren[3].children[0].innerHTML = F.reduceString(task.notes, 20);
+    // const notesDisplayStr = this.formatNotesDisplay(task.notes)
     divChildren[3].children[0].innerHTML = notesDisplayStr;
     divChildren[3].children[0].id = `tdi-proj-${projId}-todo-${todoId}-notes`;
 
@@ -149,6 +147,18 @@ const Todo = {
 
     // const todoListDiv = document.getElementById('todo-list');
     return html.div;
+  },
+  formatNotesDisplay(str) {
+    let notesArray = str.split(`\n`);
+    if (notesArray.length > 1) {
+      if (notesArray[0].length < 20) {
+        return `${notesArray[0]}...`;
+      } else {
+        return F.reduceString(notesArray[0], 20);
+      }
+    } else {
+      return F.reduceString(task.notes, 20);
+    }
   },
 
 

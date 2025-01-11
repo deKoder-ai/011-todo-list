@@ -56,17 +56,38 @@ localStorage uses JSON to send and store data, and when you retrieve the data, i
 
 
  Features to add:
-  - Save projects and todo lists to local machine
-  - Function to append todo lists on change of project - ✔
-  - Function to sort list order by due date/alphabetically/whatever
-  - Color changes with priority
-  - Show days remaining till task or project due
-  - Function to delete projects and todo list items - backup local storage before deletion to allow undo
-  - Refactor case 'notes': in todoEdits.js
-  - Fix edit bug where edit mode is locked on if the user clicks another project or page
+ - Function to append todo lists on change of project - ✔
+ - Fix max length of displayed task string bug - ✔
+ - Function to delete projects - ✔
+ - trim project name string length for project button - ✔
+ - add undo functionality - ✔
 
-// to commit
+ - Save projects and todo lists to local machine - ~
+
+ - Fix edit todo bug - always selects the first row instead of the clicked one. This used to work >:/
+    I think this is related to the way the todo lists are populated on project initialisation
+ - Fix edit bug where edit mode is locked on if the user clicks another project or page
+ - Function to delete todo list items - backup local storage before deletion to allow undo
+ - Right click or ctrl click to delete project/todo item?
+ - Refactor case 'notes': in todoEdits.js
+ - Color changes with priority
+ - Show days remaining till task or project due
+ - Function to sort list order by due date/alphabetically/whatever
+
+// committed 11/01/25
 Add logic to switch between projects and adjust notes display formatting
 
  - add functionality to switch between projects and display their todo lists
  - adjust project task notes display format to replace any characters after \n with ellipsis
+
+ // to commit
+Add save and delete project functions using localStorage + undo capability
+
+ - save Projects.list to local storage when adding a new project
+ - Refactor Projects.js and add loop to initialise project button list on page load
+ - Add total number of projects to Projects button
+ - Fix bug where maximum length of displayed task string was not limited to prevent overflow
+ - Add ability to delete projects
+ - Trim project name with ellipsis to avoid overflow to new line
+ - Add undo functionality
+

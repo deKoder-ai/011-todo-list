@@ -74,7 +74,6 @@ const todoEdits = {
         switch(todoEdits.taskItemKey) {
           case 'task':
             // todoEdits.addMaskToDOM();
-            console.log(id);
             todoEdits.showInstructions(true);
             todoEdits.getEditElements(id);
             todoEdits.switchToEditDisplay();
