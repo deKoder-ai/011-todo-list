@@ -3,7 +3,7 @@ import newProjectForm from '../html/newProjectForm.html';
 import { Todo } from './Todo.js';
 
 const Projects = {
-  current: 0,
+  currentProjId: 0,
   // today: {
   //   name: 'Today',
   //   dueDate: F.getDate(),
@@ -19,9 +19,27 @@ const Projects = {
     {name: 'Daily', dueDate: F.getDate(), todoList: []}
   ],
   toggleNewForm: false,
+  mask: undefined,
+  addMaskToDOM() {
+    const content = document.getElementById('content');
+    console.log(content);
+    this.mask = F.newElement('div', '', ['mask-bcg'], 'mask-bcg');
+    this.mask.addEventListener('click', function(e) {
+      if (e.target.id === 'mask-bcg') {
+        Projects.closeNewForm();
+      }
+    });
+    content.appendChild(this.mask);
+  },
+  removeMask() {
+    this.mask.remove();
+    this.mask = undefined;
+    console.log(this.mask);
+  },
   newForm() {
-    const mask = document.getElementById('mask-page');
-    mask.style.display = 'block';
+    // const mask = document.getElementById('mask-page');
+    // mask.style.display = 'block';
+    this.addMaskToDOM();
     const mainContent = document.getElementById('main-content');
     const container = F.newElement('div', newProjectForm, '', 'temp');
     mainContent.appendChild(container);
@@ -31,8 +49,9 @@ const Projects = {
   closeNewForm() {
     document.getElementById('new-project-form').reset();
     document.getElementById('temp').remove();
-    const maskPage = document.getElementById('mask-page');
-    maskPage.style.display = 'none';
+    // const maskPage = document.getElementById('mask-page');
+    // maskPage.style.display = 'none';
+    this.removeMask();
     this.toggleNewForm = false;
   },
   new() {
@@ -49,9 +68,9 @@ const Projects = {
         dueDate,
         todoList: []
       }
-      this.current = name;
+      this.currentProjId = name;
       this.list.push(newProject);
-      this.current = this.list.length - 1;
+      this.currentProjId = this.list.length - 1;
       this.createNewProjectBtn();
       this.closeNewForm();
       return true;
@@ -116,7 +135,7 @@ const Projects = {
           dateP.style.fontWeight = 'initial';
         });
         newItemBtn.addEventListener('click', function() {
-          Projects.current = id;
+          Projects.currentProjId = id;
           Projects.displayProject(id);
         });
       btnDiv.appendChild(nameP);
@@ -127,15 +146,17 @@ const Projects = {
     }
   },
   displayProject(id) {
+    this.currentProjId = id;
     const projectTitle = document.getElementById('project-title');
     const mainDueDate = document.getElementById('main-due-date');
     projectTitle.innerText = this.list[id].name;
     mainDueDate.innerText = this.list[id].dueDate;
     const todoListHtml = document.getElementById('todo-list');
     todoListHtml.innerHTML = '';
-    const todoList = this.list[this.current].todoList;
+    console.log(this.currentProjId);
+    const todoList = this.list[this.currentProjId].todoList;
     for (const item of todoList) {
-      Todo.appendTask(item);
+      Todo.appendTaskToDOM(item);
     }
   }
 }

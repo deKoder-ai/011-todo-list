@@ -13,9 +13,27 @@ class itemHtml {
 
 const Todo = {
   toggleNewForm: false,
+  mask: undefined,
+  addMaskToDOM() {
+    const content = document.getElementById('content');
+    console.log(content);
+    this.mask = F.newElement('div', '', ['mask-bcg'], 'mask-bcg');
+    this.mask.addEventListener('click', function(e) {
+      if (e.target.id === 'mask-bcg') {
+        Todo.closeNewForm();
+      }
+    });
+    content.appendChild(this.mask);
+  },
+  removeMask() {
+    this.mask.remove();
+    this.mask = undefined;
+    console.log(this.mask);
+  },
   newForm() {
-    const mask = document.getElementById('mask-page');
-    mask.style.display = 'block';
+    // const mask = document.getElementById('mask-page');
+    // mask.style.display = 'block';
+    this.addMaskToDOM();
     const mainContent = document.getElementById('main-content');
     const container = F.newElement('div', newTaskForm, '', 'temp');
     mainContent.appendChild(container);
@@ -25,8 +43,9 @@ const Todo = {
   closeNewForm() {
     document.getElementById('new-task-form').reset();
     document.getElementById('temp').remove();
-    const maskPage = document.getElementById('mask-page');
-    maskPage.style.display = 'none';
+    // const maskPage = document.getElementById('mask-page');
+    // maskPage.style.display = 'none';
+    this.removeMask();
     this.toggleNewForm = false;
   },
   new() {
@@ -47,10 +66,10 @@ const Todo = {
         notes,
         done: false
       }
-      const id = Projects.current;
+      const id = Projects.currentProjId;
       Projects.list[id].todoList.push(newTask);
 
-      this.itemHtml(newTask);
+      this.appendTaskToDOM(newTask);
       this.closeNewForm();
       return true;
     } else { // else handle input errors
@@ -84,7 +103,7 @@ const Todo = {
   },
   itemHtml(task) {
     const html = new itemHtml(todoItemHtml, task);
-    const projId = Projects.current;
+    const projId = Projects.currentProjId;
     // will need to remove the - 1 below if save html instead of raw data
     const todoId = Projects.list[projId].todoList.length - 1;
 
@@ -108,21 +127,37 @@ const Todo = {
     divChildren[2].children[1].selected = task.priority;
     divChildren[2].children[1].id = `tdi-proj-${projId}-todo-${todoId}-priority-edit`;
 
-    divChildren[3].children[0].innerHTML = F.reduceString(task.notes, 20);
+    let notesArray = task.notes.split(`\n`);
+    let notesDisplayStr = 'xyz';
+    if (notesArray.length > 1) {
+      if (notesArray[0].length < 20) {
+        notesDisplayStr = `${notesArray[0]}...`;
+      } else {
+        notesDisplayStr = F.reduceString(notesArray[0], 20);
+      }
+    } else {
+      notesDisplayStr = F.reduceString(task.notes, 20);
+    }
+
+    console.log(task.notes);
+    // divChildren[3].children[0].innerHTML = F.reduceString(task.notes, 20);
+    divChildren[3].children[0].innerHTML = notesDisplayStr;
     divChildren[3].children[0].id = `tdi-proj-${projId}-todo-${todoId}-notes`;
 
     divChildren[4].children[0].id = `tdi-proj-${projId}-todo-${todoId}-done`;
 
-    const todoListDiv = document.getElementById('todo-list');
-    todoListDiv.appendChild(html.div);
+
+    // const todoListDiv = document.getElementById('todo-list');
+    return html.div;
   },
 
 
 
-  
-  appendItemToDOM(task) {
+
+  appendTaskToDOM(task) {
+    const taskHtml = this.itemHtml(task);
     const todoListDiv = document.getElementById('todo-list');
-    todoListDiv.appendChild(task);
+    todoListDiv.appendChild(taskHtml);
   },
 
   item(task, due, priority, notes) {

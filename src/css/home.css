@@ -462,7 +462,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   color: white;
   font-size: 2rem;
   background-color: var(--red);
-  /* width: 60rem; */
   font-size: 1.8rem;
   z-index: 500000;
   padding: 1rem 3rem;
@@ -480,13 +479,12 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 #edit-note {
   display: block;
   position: absolute;
-  top: 4.5rem;
-  left: 50%;
-  transform: translateX(-50%);
+  top: 6rem;
+  left: 70%;
+  transform: translateX(-75%);
   width: 55rem;
   outline: 2px solid black;
   background-color: white;
-  z-index: 10000;
   color: black;
   padding: 0rem 1.5rem;
   border-radius: 7px;
@@ -541,4 +539,28 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   color: white;
   font-weight: 600;
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.719);
+}
+
+/* .mask-page {
+  display: none;
+  position: fixed;
+  top: var(--nav-bar-height);
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.795);
+  z-index: 20000;
+  overflow-y: auto;
+} */
+
+#mask-bcg {
+  display: block;
+  position: absolute;
+  top: var(--nav-bar-height);
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.795);
+  z-index: 10;
+  overflow-y: auto;
 }

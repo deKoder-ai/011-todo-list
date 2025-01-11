@@ -2,7 +2,6 @@ import { Projects } from "./Projects";
 import { F } from "./Functions";
 import noteEditHtml from '../html/notesEdit.html';
 
-
 const todoEdits = {
   editing: false,
   projId: undefined,
@@ -11,42 +10,78 @@ const todoEdits = {
   taskItemKey: undefined,
   tdiInfo: undefined,
   tdiEdit: undefined,
-  showInstructions(show) {
-    const instructions = document.getElementById('edit-instructions');
-    if (show) {
-      instructions.style.display = 'block'
-    } else {
-      instructions.style.display = 'none'
-    };
+  mask: undefined,
+  idSplit: undefined,
+  addMaskToDOM() {
+    const content = document.getElementById('content');
+    console.log(content);
+    this.mask = F.newElement('div', '', ['mask-bcg'], 'mask-bcg');
+    // this.mask.addEventListener('click', function(e) {
+    //   if (e.target.id === 'mask-bcg') {
+    //     todoEdits.closeNewForm();
+    //   }
+    // });
+    content.appendChild(this.mask);
   },
-  setEditProjInfo(idSplit) {
-    this.projId = Number(idSplit[2]);
+  removeMask() {
+    this.mask.remove();
+    this.mask = undefined;
+    console.log(this.mask);
+  },
+  setEditProjInfo() {
+    this.projId = Number(this.idSplit[2]);
     this.currentProj = Projects.list[this.projId];
-    this.taskId = Number(idSplit[4]);
-    this.taskItemKey = idSplit[5];
+    this.taskId = Number(this.idSplit[4]);
+    this.taskItemKey = this.idSplit[5];
     console.log(`Project: ${this.currentProj.name} | Task ID: ${this.taskId} | Data: ${this.taskItemKey}`);
   },
   getEditElements(id) {
     this.tdiInfo = document.getElementById(id);
     this.tdiEdit = document.getElementById(id + '-edit');
   },
+  clickCount: 0,
+  abc() {
+    // console.log(this.idSplit[6]);
+    // if (this.clickCount == 1 && this.editing && this.idSplit[6] !== 'edit') {
+    //   console.log('clickety click');
+    //   this.tdiEdit.value = this.tdiInfo.innerHTML;
+    //   this.tdiInfo.style.display = 'block';
+    //   this.tdiEdit.style.display = 'none';
+    //   this.editing = false;
+    //   this.showInstructions(false);
+    //   this.clickCount = 0;
+    //   // if (!this.editing) {
+    //   //   this.clickCount = 0;
+    //   // }
+    // }
+    console.log(this.clickCount);
+  },
   events() {
     const todoListDiv = document.getElementById('todo-list')
+
+    document.body.addEventListener('click', function(e) {
+      const target = e.target;
+      console.log('Click me baby one more time');
+      todoEdits.abc();
+    });
+
     todoListDiv.addEventListener('click', function(e) {
       const id = e.target.id;
-      const idSplit = id.split('-');
+      todoEdits.idSplit = id.split('-');
       // check if not currently editing and target is todo list item
-      if (!todoEdits.editing && idSplit[0] === 'tdi') {
-        todoEdits.setEditProjInfo(idSplit);
+      if (!todoEdits.editing && todoEdits.idSplit[0] === 'tdi') {
+        todoEdits.setEditProjInfo();
         
         switch(todoEdits.taskItemKey) {
           case 'task':
+            // todoEdits.addMaskToDOM();
             todoEdits.showInstructions(true);
             todoEdits.getEditElements(id);
             todoEdits.switchToEditDisplay();
             todoEdits.tdiEdit.addEventListener('keydown', function(e) {
               todoEdits.handleKeyPress(e);
             });
+            todoEdits.clickCount = 1;
             break;
           case 'dueDate':
             todoEdits.showInstructions(true);
@@ -65,18 +100,21 @@ const todoEdits = {
               todoEdits.handleKeyPress(e);
             });
             break;
-
-
           case 'notes':
+            // todoEdits.mask.style.display = 'block';
+            // console.log(todoEdits.mask);
+            todoEdits.addMaskToDOM();
             todoEdits.tdiInfo = document.getElementById(id);
             // todoEdits.switchToEditDisplay();
             // todoEdits.tdiEdit.style.display = 'block';
             todoEdits.editing = true;
-
             const todoHeadDiv = document.getElementById('todo-head');
             const editNoteDiv = F.newElement('div', '', '', 'edit-note');
             editNoteDiv.innerHTML = noteEditHtml;
-            todoHeadDiv.appendChild(editNoteDiv);
+
+            // todoHeadDiv.appendChild(editNoteDiv);
+            todoEdits.mask.appendChild(editNoteDiv);
+
             const closeNoteEditBtn = document.getElementById('close-notes-edit');
             const notesTaskSpan = document.getElementById('edit-note-task-span');
             const notesDateSpan = document.getElementById('edit-note-date-span');
@@ -95,13 +133,22 @@ const todoEdits = {
             // handle events
             closeNoteEditBtn.addEventListener('click', function(e) {
               editNoteDiv.remove();
+              todoEdits.removeMask();
               todoEdits.editing = false;
             });
             editNoteDiv.addEventListener('keydown', function(e) {
               if (e.key === 'Escape') {
                 editNoteDiv.remove();
+                todoEdits.removeMask();
                 todoEdits.editing = false;
               } 
+            });
+            todoEdits.mask.addEventListener('click', function(e) {
+              if (e.target.id === 'mask-bcg') {
+                editNoteDiv.remove();
+                todoEdits.removeMask();
+                todoEdits.editing = false;
+              }
             });
             const editBtn = document.getElementById('notes-edit-submit');
             editBtn.addEventListener('click', function(e) {
@@ -110,23 +157,15 @@ const todoEdits = {
               todoEdits.tdiInfo.innerHTML = F.reduceString(newValue, 20);
               todoEdits.editing = false;
               editNoteDiv.remove();
+              todoEdits.removeMask();
             })
-
-            
-
-
-
-
             break;
-
           case 'done':
             todoEdits.updateDone(id);
             break;
           default:
-
             break;
         }
-
       }
     });
   },
@@ -136,7 +175,6 @@ const todoEdits = {
     this.tdiEdit.focus();
     this.editing = true;
   },
-
   handleKeyPress(e) {
     if (e.key === 'Escape') {
       this.tdiEdit.value = this.tdiInfo.innerHTML;
@@ -157,7 +195,6 @@ const todoEdits = {
     this.tdiEdit.removeEventListener('keydown', function(e) {
       todoEdits.handleKeyPress(e);
     });
-    
   },
   updateTodoListData(newValue) {
     const key = this.taskItemKey;
@@ -173,9 +210,15 @@ const todoEdits = {
     todoItem[key] = checkbox.checked;
     console.log(`Edited Project: ${this.currentProj.name}\nTask ID: ${this.taskId}\n${key}: ${todoItem[key]}`);
     console.log(this.currentProj);
-  }
+  },
+  showInstructions(show) {
+    const instructions = document.getElementById('edit-instructions');
+    if (show) {
+      instructions.style.display = 'block'
+    } else {
+      instructions.style.display = 'none'
+    };
+  },
 }
-
-
 
 export { todoEdits };

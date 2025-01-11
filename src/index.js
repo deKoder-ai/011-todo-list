@@ -15,7 +15,7 @@ import { todoEdits } from './js/todoEdits.js';
 import homeHtml from './html/home.html';
 import homeCss from './css/home.css';
 
-const logClickedElement = 0; // 0 - no log | 1 - log element
+const logClickedElement = 1; // 0 - no log | 1 - log element
 
 navBar.addToDOM();
 
@@ -94,7 +94,8 @@ document.addEventListener('DOMContentLoaded', function() {
               Projects.new();
               console.log(Projects.list);
             break;
-
+          
+          // add tasks to project
           case 'add-task-btn':
             Todo.newForm();
             break;

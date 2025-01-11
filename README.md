@@ -52,3 +52,21 @@ localStorage uses JSON to send and store data, and when you retrieve the data, i
  - Begin work on assigning todos to different project lists
  - Begin work on making todos editable
  //
+
+
+
+ Features to add:
+  - Save projects and todo lists to local machine
+  - Function to append todo lists on change of project - ✔
+  - Function to sort list order by due date/alphabetically/whatever
+  - Color changes with priority
+  - Show days remaining till task or project due
+  - Function to delete projects and todo list items - backup local storage before deletion to allow undo
+  - Refactor case 'notes': in todoEdits.js
+  - Fix edit bug where edit mode is locked on if the user clicks another project or page
+
+// to commit
+Add logic to switch between projects and adjust notes display formatting
+
+ - add functionality to switch between projects and display their todo lists
+ - adjust project task notes display format to replace any characters after \n with ellipsis
