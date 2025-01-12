@@ -1,9 +1,5 @@
 'use strict'
-import { Projects } from './Projects.js';
-import { F } from './Functions.js';
-
 const Undo = {
-  // undoObj: Projects.list,
   history: [],
   maxLength: 20,
   storageKey: 'undoHistory',
@@ -11,7 +7,6 @@ const Undo = {
   storage: undefined,
   storageAvailable: false,
   ctrlPressed: false,
-
   /**
    * Check if the given storage type is available.
    * @param {string} type - The storage type to check (e.g. 'localStorage', 'sessionStorage')
@@ -45,7 +40,8 @@ const Undo = {
         break;
     }
   },
-  /** * Remove oldest undo history items when the history array exceeds the 
+  /** 
+   * Remove oldest undo history items when the history array exceeds the 
    * maximum length. */
   manageLength() {
     if (!this.history || !this.maxLength) {
@@ -78,10 +74,8 @@ const Undo = {
         }
     }
   },
-  
-
-
-  /** * Clear the undo history array and storage. */
+  /** 
+   * Clear the undo history array and storage. */
   clearHistory() {
     try {
       this.history = [];
@@ -91,20 +85,32 @@ const Undo = {
       console.error(e);
     }
   },
-
-  initialize(maxLength) {
+  /**
+   * Initialize undo storage and maximum length.
+   * @param {number} maxLength - Sets the maximum length of undo history
+   * @param {string} storageType - Sets the storage type to be used for undo 
+   * history (e.g. 'localStorage', 'sessionStorage')
+   */
+  initialize(maxLength = this.maxLength, storageType = this.storageType) {
     if (maxLength) {this.maxLength = maxLength}
-    if (this.storageAvailable(this.storageType)) {
-      this.setStorageType(this.storageType);
+    if (this.storageAvailable(storageType)) {
+      this.setStorageType(storageType);
       if (this.storage.getItem(this.storageKey) !== null) {
-        console.log(`${this.storageKey} exists in ${this.storageType}`);
+        console.log(`${this.storageKey} exists in ${storageType}`);
         this.history = JSON.parse(this.storage.getItem(this.storageKey));
       } else {
-        console.log(`${this.storageKey} does not exist in ${this.storageType}`);
+        console.log(`${this.storageKey} does not exist in ${storageType}`);
         this.history = [];
         this.storage.setItem(this.storageKey, JSON.stringify(this.history));
       }
     }
+  },
+  /**
+   * Listen for ctrl + z keypress then run the restore function.
+   * @param {function} restore - The restore function to be run on ctrl + z
+   * @param {object} item - The object to be compared to undo history
+   */
+  keyEvents(restore, item) {
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Control') {
         this.ctrlPressed = true;
@@ -118,29 +124,21 @@ const Undo = {
     document.addEventListener('keydown', (e) => {
       if (e.key === 'z' || e.key === 'Z') {
         const length = this.history.length
-        if (length === 0) {
-          alert('Nothing to undo');
-        } else if (Projects.list === this.history[length - 1]) {
+        if (length <= 0 || item === this.history[length - 1]) {
           alert('Nothing to undo');
         } else {
-          if (length > 0) {
-            this.update(this.history.pop());
-            try {
-              this.storage.setItem(this.storageKey, JSON.stringify(this.history));
-            } catch (e) {
-              console.error(e);
-              console.log('Error writing undo history to storage');
-            }
-            window.location.reload(true);
+          const lastItem = this.history.pop();
+          // run restore function passed as parameter
+          restore(lastItem);
+          try {
+            this.storage.setItem(this.storageKey, JSON.stringify(this.history));
+          } catch (e) {
+            console.error(e);
+            console.log('Error writing undo history to storage');
           }
         }
       }
     });
-  },
-  update(lastItem) {
-    Projects.list = lastItem;
-    F.writeToLocalStorage('projectsList', Projects.list);
-    console.log('Undo: Projects list restored')
   }
 }
 

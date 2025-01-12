@@ -13,16 +13,15 @@ const Projects = {
   mask: undefined,
   updateCount() {
     const projectsBtn = document.getElementById('projects-btn');
-    let count = 0;
-    if (this.list.length > 2) { count = this.list.length - 2}
+    let count = this.list.length > 2 ? this.list.length - 2 : 0;
     projectsBtn.innerText = `Projects - ${count}`;
   },
   addMaskToDOM() {
     const content = document.getElementById('content');
     this.mask = F.newElement('div', '', ['mask-bcg'], 'mask-bcg');
-    this.mask.addEventListener('click', function(e) {
+    this.mask.addEventListener('click', (e) => {
       if (e.target.id === 'mask-bcg') {
-        Projects.closeNewForm();
+        this.closeNewForm();
       }
     });
     content.appendChild(this.mask);
@@ -66,11 +65,11 @@ const Projects = {
       this.currentProjId = name;
       this.list.push(newProject);
       this.currentProjId = this.list.length - 1;
-      this.displayProject(this.currentProjId);
+      this.displayProjectContent(this.currentProjId);
       this.createNewBtn(this.list[this.currentProjId], this.currentProjId);
       this.closeNewForm();
-      F.writeToLocalStorage('projectsList', Projects.list);
-      Undo.write(Projects.list);
+      F.writeToLocalStorage('projectsList', this.list);
+      Undo.write(this.list);
       this.updateCount();
       // console.log(`Stored Projects: ${F.getLocalStorageItem('projectsList')}`);
       return true;
@@ -92,12 +91,12 @@ const Projects = {
           errorMsg.style.display = 'block';
       }
     }
-    nameInput.addEventListener('input', function(e) {
+    nameInput.addEventListener('input', (e) => {
       if (nameInput.value !== '') {
         nameInput.style.outline = '1px solid black';
       }
     });
-    dateInput.addEventListener('input', function(e) {
+    dateInput.addEventListener('input', (e) => {
       if (dateInput.value !== '') {
         dateInput.style.outline = '1px solid black';
       }
@@ -116,28 +115,27 @@ const Projects = {
       btnDiv.appendChild(nameP);
       btnDiv.appendChild(dateP);
       btnDiv.appendChild(newItemBtn);
-      const projectsList = document.getElementById('left-sidebar-projects');
-      projectsList.appendChild(btnDiv);  
+      document.getElementById('left-sidebar-projects').appendChild(btnDiv);  
     }
   },
   addBtnEvents(button, components, id) {
-    button.addEventListener('mouseenter', function() {
+    button.addEventListener('mouseenter', (e) => {
       for (let comp of components) { comp.classList.add('project-btn-hover'); }
     });
-    button.addEventListener('mouseleave', function() {
+    button.addEventListener('mouseleave', (e) => {
       for (let comp of components) { comp.classList.remove('project-btn-hover'); }
     });
-    button.addEventListener('click', function(e) {
-      Projects.currentProjId = id;
-      Projects.displayProject(id);
-      console.log(Projects.list[id]);
+    button.addEventListener('click', (e) => {
+      this.currentProjId = id;
+      this.displayProjectContent(id);
+      console.log(this.list[id]);
     });
     // button.addEventListener('contextmenu', (event) => {
     //   console.log("🖱 right click detected!");
     //   event.preventDefault(); // Prevents the default context menu from appearing
     // });
   },
-  displayProject(id) {
+  displayProjectContent(id) {
     this.currentProjId = id;
     const projectTitle = document.getElementById('project-title');
     const mainDueDate = document.getElementById('main-due-date');
@@ -150,64 +148,77 @@ const Projects = {
       Todo.appendTaskToDOM(item);
     }
   },
+  populateProjectsListDiv() {
+    document.getElementById('left-sidebar-projects').innerHTML = '';
+    for (let i = 2; i < this.list.length; i++) {
+      this.createNewBtn(this.list[i], i);
+    }
+  },
 
 
   delete() {
     let ctrlPressed = false;
-    document.addEventListener('keydown', function(e) {
+    document.addEventListener('keydown', (e) => {
       if (e.key === 'Control') {
           ctrlPressed = true;
       }
     });
-    document.addEventListener('keyup', function(e) {
+    document.addEventListener('keyup', (e) => {
       if (e.key === 'Control') {
           ctrlPressed = false;
       }
     });
     // Capture clicks on a specific element
-    document.getElementById('left-sidebar-projects').addEventListener('click', function(e) {
+    document.getElementById('left-sidebar-projects').addEventListener('click', (e) => {
       if (ctrlPressed) {
           console.log('Control+Click detected');
 
-          Projects.mask = F.newElement('div', '', ['mask-bcg'], 'mask-bcg');
+          this.mask = F.newElement('div', '', ['mask-bcg'], 'mask-bcg');
 
           // close mask and delete button
-          Projects.mask.addEventListener('click', function(e) {
+          this.mask.addEventListener('click', (e) => {
             if (e.target.id === 'mask-bcg') {
               console.log('killdembugs');
-              Projects.mask.remove();
-              Projects.mask = undefined;
+              this.mask.remove();
+              this.mask = undefined;
             }
           });
-          document.body.appendChild(Projects.mask);
+          document.body.appendChild(this.mask);
 
           const clickId = e.target.id;
           const idSplit = clickId.split('-');
           const projectIndex = idSplit[2]
-          const project = Projects.list[projectIndex];
+          const project = this.list[projectIndex];
           const parentId = `${idSplit[0]}-${idSplit[1]}-div-${idSplit[2]}`;
           let projectBtn = document.getElementById(parentId);
 
           const delBtnText = `Delete Project: ${F.reduceString(project.name, 15)}`;
           const delProjBtn = F.newElement('button', delBtnText, '', 'del-proj-btn');
-          Projects.mask.appendChild(delProjBtn);
-          delProjBtn.addEventListener('click', function(e) {
+          this.mask.appendChild(delProjBtn);
+          delProjBtn.addEventListener('click', (e) => {
 
             // Undo.history.push(Projects.list);
             // F.writeToLocalStorage('undoHistory', Projects.undoHistory);
-            Undo.write(Projects.list);
+            Undo.write(this.list);
             
             projectBtn.remove();
             projectBtn = undefined;
-            Projects.list.splice(projectIndex, 1);
-            Projects.mask.remove();
-            Projects.mask = undefined;
-            F.writeToLocalStorage('projectsList', Projects.list);
+            this.list.splice(projectIndex, 1);
+            this.mask.remove();
+            this.mask = undefined;
+            F.writeToLocalStorage('projectsList', this.list);
             
+            this.populateProjectsListDiv();
             window.location.reload(true);
           })
       }
     });
+  },
+  restore(lastItem) {
+    Projects.list = lastItem;
+    F.writeToLocalStorage('projectsList', Projects.list);
+    Projects.populateProjectsListDiv();
+    Projects.updateCount();
   },
 }
 

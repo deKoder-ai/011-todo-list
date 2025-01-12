@@ -34,7 +34,8 @@ const contentDiv = document.getElementById('content');
 
 document.addEventListener('DOMContentLoaded', function() {
   navBar.addToDOM();
-  Undo.initialize(20);
+  Undo.initialize();
+  Undo.keyEvents(Projects.restore, Projects.list);
 
   //check if local storage available
   // lsAvailable = F.storageAvailable('localStorage');
@@ -52,50 +53,20 @@ document.addEventListener('DOMContentLoaded', function() {
   // console.log(Projects.undoHistory);
   console.log(F.getLocalStorageKeys());
 
-  // function manageUndoLength(maxLength) {
-  //   if (Projects.undoHistory.length > (maxLength)) {
-  //     Projects.undoHistory.shift();
-  //     manageUndoLength(maxLength);
-  //   }
-  //   F.writeToLocalStorage('undoHistory', Projects.undoHistory);
-  // }
-
-  // manageUndoLength(20);
-
-  // let ctrl = false;
-  // document.addEventListener('keydown', function(e) {
-  //   if (e.key === 'Control') {
-  //       ctrl = true;
-  //   }
-  // });
-  // document.addEventListener('keydown', function(e) {
-  //   if (e.key === 'z' && ctrl === true) {
-  //       console.log('Undo time');
-  //       Projects.list = Projects.undoHistory.pop();
-  //       F.writeToLocalStorage('undoHistory', Projects.undoHistory);
-  //       F.writeToLocalStorage('projectsList', Projects.list);
-  //       window.location.reload(true);
-  //   }
-  // });
-
-
-
 
   // fill content element with homeHtml - this will be done conditionally later
   document.getElementById('content').innerHTML = homeHtml;
 
   Projects.updateCount();
-  // initialise projects button list from local storage
-  for (let i = 2; i < Projects.list.length; i++) {
-    Projects.createNewBtn(Projects.list[i], i);
-  }
+  Projects.populateProjectsListDiv();
+
 
   Projects.delete();
   
 
 
   // const pageContent = document.getElementById('content');
-  Projects.displayProject(0);
+  Projects.displayProjectContent(0);
   
   todoEdits.events();
 
@@ -131,10 +102,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
           // projects events
           case 'today-btn':
-            Projects.displayProject(0);
+            Projects.displayProjectContent(0);
             break;
           case 'daily-btn':
-            Projects.displayProject(1);
+            Projects.displayProjectContent(1);
             break;
           case 'projects-btn':
             console.log('projects-btn');
