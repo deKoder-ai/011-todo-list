@@ -7,6 +7,7 @@ import { navBar } from './js/nav.js';
 import { Todo } from './js/Todo.js';
 import { F } from './js/Functions.js';
 import { Projects } from './js/Projects.js';
+import { Undo } from './js/Undo.js';
 // import { todoEdit } from './js/xx.js';
 // import odinImage from "./img/odin-lined.png";
 
@@ -17,7 +18,9 @@ import homeCss from './css/home.css';
 
 const logClickedElement = 0; // 0 - no log | 1 - log element
 
-navBar.addToDOM();
+// Projects.list = Undo.history[Undo.history.length - 1];
+
+// localStorage.clear();
 
 
 
@@ -30,46 +33,50 @@ const contentDiv = document.getElementById('content');
 
 
 document.addEventListener('DOMContentLoaded', function() {
+  navBar.addToDOM();
+  Undo.initialize(20);
 
   //check if local storage available
-  F.checkLocalStorageAvailability();
+  // lsAvailable = F.storageAvailable('localStorage');
+  // clear undo history on load
+  // if (lsAvailable) { Undo.clearHistory(); }
 
   // set Projects.list to projectsList stored in localstorage
   const loadProjects = F.getLocalStorageItem('projectsList');
   if (loadProjects) { Projects.list = loadProjects };
   console.log(`Projects List :`);
   console.log(Projects.list);
-  const loadUndoHistory = F.getLocalStorageItem('undoHistory');
-  if (loadUndoHistory) { Projects.undoHistory = loadUndoHistory};
-  console.log(`Undo History: `)
-  console.log(Projects.undoHistory);
+  // const loadUndoHistory = F.getLocalStorageItem('undoHistory');
+  // if (loadUndoHistory) { Projects.undoHistory = loadUndoHistory};
+  // console.log(`Undo History: `)
+  // console.log(Projects.undoHistory);
   console.log(F.getLocalStorageKeys());
 
-  function manageUndoLength(maxLength) {
-    if (Projects.undoHistory.length > (maxLength)) {
-      Projects.undoHistory.shift();
-      manageUndoLength(maxLength);
-    }
-    F.writeToLocalStorage('undoHistory', Projects.undoHistory);
-  }
+  // function manageUndoLength(maxLength) {
+  //   if (Projects.undoHistory.length > (maxLength)) {
+  //     Projects.undoHistory.shift();
+  //     manageUndoLength(maxLength);
+  //   }
+  //   F.writeToLocalStorage('undoHistory', Projects.undoHistory);
+  // }
 
-  manageUndoLength(20);
+  // manageUndoLength(20);
 
-  let ctrl = false;
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Control') {
-        ctrl = true;
-    }
-  });
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'z' && ctrl === true) {
-        console.log('Undo time');
-        Projects.list = Projects.undoHistory.pop();
-        F.writeToLocalStorage('undoHistory', Projects.undoHistory);
-        F.writeToLocalStorage('projectsList', Projects.list);
-        window.location.reload(true);
-    }
-  });
+  // let ctrl = false;
+  // document.addEventListener('keydown', function(e) {
+  //   if (e.key === 'Control') {
+  //       ctrl = true;
+  //   }
+  // });
+  // document.addEventListener('keydown', function(e) {
+  //   if (e.key === 'z' && ctrl === true) {
+  //       console.log('Undo time');
+  //       Projects.list = Projects.undoHistory.pop();
+  //       F.writeToLocalStorage('undoHistory', Projects.undoHistory);
+  //       F.writeToLocalStorage('projectsList', Projects.list);
+  //       window.location.reload(true);
+  //   }
+  // });
 
 
 
@@ -192,7 +199,7 @@ document.addEventListener('keydown', function(e) {
     } else if (Todo.toggleNewForm === true) {
       Todo.closeNewForm();
     }
-  } else if (event.key === '+') {
+  } else if (e.key === '+') {
     Projects.newForm();
   }
 });

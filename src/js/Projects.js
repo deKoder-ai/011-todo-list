@@ -1,6 +1,7 @@
 import { F } from './Functions.js';
 import newProjectForm from '../html/newProjectForm.html';
 import { Todo } from './Todo.js';
+import { Undo } from './Undo.js';
 
 const Projects = {
   currentProjId: 0,
@@ -69,6 +70,7 @@ const Projects = {
       this.createNewBtn(this.list[this.currentProjId], this.currentProjId);
       this.closeNewForm();
       F.writeToLocalStorage('projectsList', Projects.list);
+      Undo.write(Projects.list);
       this.updateCount();
       // console.log(`Stored Projects: ${F.getLocalStorageItem('projectsList')}`);
       return true;
@@ -190,22 +192,23 @@ const Projects = {
           const delProjBtn = F.newElement('button', delBtnText, '', 'del-proj-btn');
           Projects.mask.appendChild(delProjBtn);
           delProjBtn.addEventListener('click', function(e) {
-            Projects.undoHistory.push(Projects.list);
-            F.writeToLocalStorage('undoHistory', Projects.undoHistory);
+
+            // Undo.history.push(Projects.list);
+            // F.writeToLocalStorage('undoHistory', Projects.undoHistory);
+            Undo.write(Projects.list);
+            
             projectBtn.remove();
             projectBtn = undefined;
             Projects.list.splice(projectIndex, 1);
             Projects.mask.remove();
             Projects.mask = undefined;
             F.writeToLocalStorage('projectsList', Projects.list);
+            
             window.location.reload(true);
           })
       }
     });
   },
-  undoHistory: [
-
-  ],
 }
 
 export { Projects }

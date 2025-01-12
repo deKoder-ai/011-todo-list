@@ -64,11 +64,12 @@ localStorage uses JSON to send and store data, and when you retrieve the data, i
 
  - Save projects and todo lists to local machine - ~
 
+ - Refactor undo to separate module and fix bug that crashes when undo is clicked beyond last undo
  - Fix edit todo bug - always selects the first row instead of the clicked one. This used to work >:/
     I think this is related to the way the todo lists are populated on project initialisation
  - Fix edit bug where edit mode is locked on if the user clicks another project or page
  - Function to delete todo list items - backup local storage before deletion to allow undo
- - Right click or ctrl click to delete project/todo item?
+ - ctrl click to delete todo item?
  - Refactor case 'notes': in todoEdits.js
  - Color changes with priority
  - Show days remaining till task or project due
@@ -80,7 +81,7 @@ Add logic to switch between projects and adjust notes display formatting
  - add functionality to switch between projects and display their todo lists
  - adjust project task notes display format to replace any characters after \n with ellipsis
 
- // to commit
+ // committed 11/01/25
 Add save and delete project functions using localStorage + undo capability
 
  - save Projects.list to local storage when adding a new project
@@ -91,3 +92,8 @@ Add save and delete project functions using localStorage + undo capability
  - Trim project name with ellipsis to avoid overflow to new line
  - Add undo functionality
 
+
+// prompt
+Please provide me some feedback to improve my Undo module. I am looking for tips on improving the logic, syntax, error handling, processor and memory efficiency, keeping the code DRY, SOLID principles, documentation, naming conventions and anything else you think might help to improve the code.
+All suggestions should be based on ES2015 or later. Please ask me as many questions as you need to help you generate the best advice.
+The module code can be found here: 

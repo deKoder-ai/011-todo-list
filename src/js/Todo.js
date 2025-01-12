@@ -1,5 +1,6 @@
-import { F } from './Functions';
-import { Projects } from './Projects';
+import { F } from './Functions.js';
+import { Projects } from './Projects.js';
+import { Undo } from './Undo.js'
 import newTaskForm from '../html/newTaskForm.html';
 import todoItemHtml from '../html/todoItem.html';
 
@@ -68,6 +69,7 @@ const Todo = {
       const id = Projects.currentProjId;
       Projects.list[id].todoList.push(newTask);
       F.writeToLocalStorage('projectsList', Projects.list);
+      Undo.write(Projects.list);
       this.appendTaskToDOM(newTask);
       this.closeNewForm();
       return true;

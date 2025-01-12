@@ -1,5 +1,6 @@
-import { Projects } from "./Projects";
-import { F } from "./Functions";
+import { Projects } from './Projects.js';
+import { F } from './Functions.js';
+import { Undo } from './Undo.js';
 import noteEditHtml from '../html/notesEdit.html';
 
 const todoEdits = {
@@ -159,11 +160,13 @@ const todoEdits = {
               editNoteDiv.remove();
               todoEdits.removeMask();
               F.writeToLocalStorage('projectsList', Projects.list);
+              Undo.write(Projects.list);
             })
             break;
           case 'done':
             todoEdits.updateDone(id);
             F.writeToLocalStorage('projectsList', Projects.list);
+            Undo.write(Projects.list);
             break;
           default:
             break;
@@ -194,6 +197,7 @@ const todoEdits = {
       this.editing = false;
       this.showInstructions(false);
       F.writeToLocalStorage('projectsList', Projects.list);
+      Undo.write(Projects.list);
     }
     this.tdiEdit.removeEventListener('keydown', function(e) {
       todoEdits.handleKeyPress(e);

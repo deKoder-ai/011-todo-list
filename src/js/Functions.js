@@ -60,36 +60,21 @@ const F = {
     }
     
   },
+  /**
+  * Check if the given storage type is available.
+  * @param {string} type - The storage type to check (e.g. 'localStorage', 'sessionStorage')
+  * @returns {boolean} Whether the storage type is available
+  */
   storageAvailable(type) {
-    let storage;
     try {
-      storage = window[type];
+      const storage = window[type];
       const x = "__storage_test__";
       storage.setItem(x, x);
       storage.removeItem(x);
       return true;
     } catch (e) {
-      return (
-        e instanceof DOMException &&
-        e.name === "QuotaExceededError" &&
-        // acknowledge QuotaExceededError only if there's something already stored
-        storage &&
-        storage.length !== 0
-      );
-    }
-  },
-  checkLocalStorageAvailability() {
-    if (this.storageAvailable('localStorage')) {
-      console.log('Local storage is available');
-    } else {
-      console.log('Error: Local storage is not available');
-    }
-  },
-  checkSessionStorageAvailability() {
-    if (this.storageAvailable('sessionStorage')) {
-      console.log('Session storage is available');
-    } else {
-      console.log('Error: Session storage is not available');
+      console.error(e);
+      return false;
     }
   },
   writeToLocalStorage(key, data) {
