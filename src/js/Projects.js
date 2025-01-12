@@ -2,6 +2,7 @@ import { F } from './Functions.js';
 import newProjectForm from '../html/newProjectForm.html';
 import { Todo } from './Todo.js';
 import { Undo } from './Undo.js';
+import { Errors } from './handleFormErrors.js';
 
 const Projects = {
   currentProjId: 0,
@@ -10,7 +11,9 @@ const Projects = {
     {name: 'Daily', dueDate: F.getDate(), todoList: []}
   ],
   toggleNewForm: false,
+  toggleDelProjBtn: false,
   mask: undefined,
+  ctrlPressed: false,
   updateCount() {
     const projectsBtn = document.getElementById('projects-btn');
     let count = this.list.length > 2 ? this.list.length - 2 : 0;
@@ -21,18 +24,16 @@ const Projects = {
     this.mask = F.newElement('div', '', ['mask-bcg'], 'mask-bcg');
     this.mask.addEventListener('click', (e) => {
       if (e.target.id === 'mask-bcg') {
-        this.closeNewForm();
+        if (this.toggleNewForm) {
+          this.closeNewForm();
+        } else if (this.toggleDelProjBtn) {
+          this.closeDelProjBtn();
+        }
       }
     });
     content.appendChild(this.mask);
   },
-  removeMask() {
-    this.mask.remove();
-    this.mask = undefined;
-  },
   newForm() {
-    // const mask = document.getElementById('mask-page');
-    // mask.style.display = 'block';
     this.addMaskToDOM();
     const mainContent = document.getElementById('main-content');
     const container = F.newElement('div', newProjectForm, '', 'temp');
@@ -43,25 +44,19 @@ const Projects = {
   closeNewForm() {
     document.getElementById('new-project-form').reset();
     document.getElementById('temp').remove();
-    // const maskPage = document.getElementById('mask-page');
-    // maskPage.style.display = 'none';
-    console.log(this.mask);
-    this.removeMask();
+    this.mask.remove();
     this.toggleNewForm = false;
   },
+  
   new() {
-    const errorMsg = document.querySelector('.form-error');
     const nameInput = document.getElementById('new-project-name');
     const dateInput = document.getElementById('new-project-due-date');
     const name = nameInput.value;
     const dueDate = F.dateToUKStr(dateInput.value);
-    // add project if form complete
-    if (name !== '' && dueDate) {
-      const newProject = {
-        name,
-        dueDate,
-        todoList: []
-      }
+
+    if (Errors.handleNewProjectFormInputErrors(name, dueDate, nameInput, dateInput)) {
+      if (name !== '' && dueDate) { // add new project if form complete
+      const newProject = { name, dueDate, todoList: [] };
       this.currentProjId = name;
       this.list.push(newProject);
       this.currentProjId = this.list.length - 1;
@@ -73,34 +68,8 @@ const Projects = {
       this.updateCount();
       // console.log(`Stored Projects: ${F.getLocalStorageItem('projectsList')}`);
       return true;
-    } else { // else handle input errors
-      if (!name && !dueDate) {
-        nameInput.style.outline = '3px solid var(--red)';
-        dateInput.style.outline = '3px solid var(--red)';
-        errorMsg.innerHTML = 'Please enter a name and due date for your project';
-        errorMsg.style.display = 'block';
-      } else if (name !== '' && !dueDate) {
-          nameInput.style.outline = '1px solid black';
-          dateInput.style.outline = '3px solid var(--red)';
-          errorMsg.innerHTML = 'Please enter a due date for your project';
-          errorMsg.style.display = 'block';
-      } else if (name === '' && dueDate) {
-          nameInput.style.outline = '3px solid var(--red)';
-          dateInput.style.outline = '1px solid black';
-          errorMsg.innerHTML = 'Please enter a name for your project';
-          errorMsg.style.display = 'block';
       }
     }
-    nameInput.addEventListener('input', (e) => {
-      if (nameInput.value !== '') {
-        nameInput.style.outline = '1px solid black';
-      }
-    });
-    dateInput.addEventListener('input', (e) => {
-      if (dateInput.value !== '') {
-        dateInput.style.outline = '1px solid black';
-      }
-    });
   },
   createNewBtn(project, id) {
     if (project.name && project.dueDate) {
@@ -156,34 +125,22 @@ const Projects = {
   },
 
 
-  delete() {
-    let ctrlPressed = false;
+  deleteEvent() {
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Control') {
-          ctrlPressed = true;
+          this.ctrlPressed = true;
       }
     });
     document.addEventListener('keyup', (e) => {
       if (e.key === 'Control') {
-          ctrlPressed = false;
+          this.ctrlPressed = false;
       }
     });
     // Capture clicks on a specific element
     document.getElementById('left-sidebar-projects').addEventListener('click', (e) => {
-      if (ctrlPressed) {
-          console.log('Control+Click detected');
-
-          this.mask = F.newElement('div', '', ['mask-bcg'], 'mask-bcg');
-
-          // close mask and delete button
-          this.mask.addEventListener('click', (e) => {
-            if (e.target.id === 'mask-bcg') {
-              console.log('killdembugs');
-              this.mask.remove();
-              this.mask = undefined;
-            }
-          });
-          document.body.appendChild(this.mask);
+      if (this.ctrlPressed) {
+          this.toggleDelProjBtn = true;
+          this.addMaskToDOM();
 
           const clickId = e.target.id;
           const idSplit = clickId.split('-');
@@ -197,22 +154,23 @@ const Projects = {
           this.mask.appendChild(delProjBtn);
           delProjBtn.addEventListener('click', (e) => {
 
-            // Undo.history.push(Projects.list);
-            // F.writeToLocalStorage('undoHistory', Projects.undoHistory);
             Undo.write(this.list);
             
             projectBtn.remove();
-            projectBtn = undefined;
             this.list.splice(projectIndex, 1);
             this.mask.remove();
-            this.mask = undefined;
             F.writeToLocalStorage('projectsList', this.list);
             
-            this.populateProjectsListDiv();
+            // this.populateProjectsListDiv();
             window.location.reload(true);
           })
       }
     });
+  },
+  closeDelProjBtn() {
+    document.getElementById('del-proj-btn').remove();
+    this.mask.remove();
+    this.toggleDelProjBtn = true;
   },
   restore(lastItem) {
     Projects.list = lastItem;

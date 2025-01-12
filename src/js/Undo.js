@@ -4,52 +4,53 @@ const Undo = {
   maxLength: 20,
   storageKey: 'undoHistory',
   storageType: 'localStorage', // sessionStorage
-  storage: undefined,
   storageAvailable: false,
+  storage: undefined,
   ctrlPressed: false,
-  /**
-   * Check if the given storage type is available.
-   * @param {string} type - The storage type to check (e.g. 'localStorage', 'sessionStorage')
-   * @returns {boolean} Whether the storage type is available
-   */
-  storageAvailable(type) {
-    try {
-      const storage = window[type];
-      const x = "__storage_test__";
-      storage.setItem(x, x);
-      storage.removeItem(x);
-      console.log('Local storage is available');
-      this.storageAvailable = true;
-      return true;
-    } catch (e) {
-      console.error(e);
-      return false;
-    }
-  },
   /**
    * Set the type of storage to be used for undo history.
    * @param {string} type - The storage type (e.g. 'localStorage', 'sessionStorage')
    */
   setStorageType(type) {
-    switch (type) {
-      case 'localStorage':
-        this.storage = localStorage;
-        break;
-      case 'systemStorage':
-        this.storage = sessionStorage;
-        break;
+    if (!type || typeof type !== 'string') {
+      throw new Error('Invalid storage type');
     }
+    if (type === 'localStorage') {
+      this.storage = localStorage;
+    } else if (type === 'sessionStorage') {
+      this.storage = sessionStorage;
+    } else {
+      throw new Error(`Unsupported storage type: ${type}`);
+    }
+    this.storageAvailable = this.storageAvailable(type);
   },
+    /**
+   * Check if the given storage type is available.
+   * @param {string} type - The storage type to check (e.g. 'localStorage', 'sessionStorage')
+   * @returns {boolean} Whether the storage type is available
+   */
+    storageAvailable(type) {
+      try {
+        const storage = window[type]; // Ensure that storage is defined, even in browsers without support for window[type]
+        const x = "__storage_test__";
+        storage.setItem(x, x);
+        storage.removeItem(x);
+        return true;
+      } catch (e) {
+        console.error(`Error: Undo storage type ${type} is not available}`);
+        return false;
+      }
+    },
   /** 
    * Remove oldest undo history items when the history array exceeds the 
    * maximum length. */
   manageLength() {
     if (!this.history || !this.maxLength) {
-      console.error('Error: history or maxLength is missing');
+      console.error('Error: Undo history or maxLength is missing');
       return;
     }
     if (typeof this.maxLength !== 'number' || this.maxLength < 0) {
-      console.error('Error: maxLength must be a non-negative number');
+      console.error('Error: Undo maxLength must be a non-negative number');
       return;
     }
     while (this.history.length > this.maxLength) {
@@ -92,7 +93,7 @@ const Undo = {
    * history (e.g. 'localStorage', 'sessionStorage')
    */
   initialize(maxLength = this.maxLength, storageType = this.storageType) {
-    if (maxLength) {this.maxLength = maxLength}
+    if (maxLength) {this.maxLength = maxLength};
     if (this.storageAvailable(storageType)) {
       this.setStorageType(storageType);
       if (this.storage.getItem(this.storageKey) !== null) {

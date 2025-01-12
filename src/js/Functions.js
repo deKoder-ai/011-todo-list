@@ -89,16 +89,21 @@ const F = {
       console.log(`No data in key: ${key}`)
     }
   },
-  getLocalStorageKeys() {
+  getLocalStorageKeys(log) {
     const keys = Object.keys(localStorage);
-    if (keys) {
+    if (keys && log) {
       for (let key of keys) {
         console.log(`LS Key: ${key}`);
       }
     } else {
       console.log('Local storage is empty');
     }
-    console.log(`Storage length: ${localStorage.length}`);
+    return keys;
+  },
+  setMinDateToToday(inputId) {
+    var today = new Date();
+    var minDate = today.toISOString().split('T')[0]; // Format date as YYYY-MM-DD
+    document.getElementById(inputId).setAttribute('min', minDate);
   },
 }
 

@@ -3,6 +3,7 @@ import './css/poppins.css';
 import './css/reset.css';
 import './css/styles.css';
 import './css/nav.css';
+import homeHtml from './html/home.html';
 import { navBar } from './js/nav.js';
 import { Todo } from './js/Todo.js';
 import { F } from './js/Functions.js';
@@ -13,7 +14,7 @@ import { Undo } from './js/Undo.js';
 
 import { todoEdits } from './js/todoEdits.js';
 
-import homeHtml from './html/home.html';
+
 import homeCss from './css/home.css';
 
 const logClickedElement = 0; // 0 - no log | 1 - log element
@@ -37,22 +38,13 @@ document.addEventListener('DOMContentLoaded', function() {
   Undo.initialize();
   Undo.keyEvents(Projects.restore, Projects.list);
 
-  //check if local storage available
-  // lsAvailable = F.storageAvailable('localStorage');
-  // clear undo history on load
-  // if (lsAvailable) { Undo.clearHistory(); }
-
   // set Projects.list to projectsList stored in localstorage
   const loadProjects = F.getLocalStorageItem('projectsList');
   if (loadProjects) { Projects.list = loadProjects };
-  console.log(`Projects List :`);
+  console.log(`Projects List:`);
   console.log(Projects.list);
-  // const loadUndoHistory = F.getLocalStorageItem('undoHistory');
-  // if (loadUndoHistory) { Projects.undoHistory = loadUndoHistory};
-  // console.log(`Undo History: `)
-  // console.log(Projects.undoHistory);
-  console.log(F.getLocalStorageKeys());
-
+  console.log(`Local storage keys: ${localStorage.length}`);
+  F.getLocalStorageKeys(true);
 
   // fill content element with homeHtml - this will be done conditionally later
   document.getElementById('content').innerHTML = homeHtml;
@@ -61,7 +53,7 @@ document.addEventListener('DOMContentLoaded', function() {
   Projects.populateProjectsListDiv();
 
 
-  Projects.delete();
+  Projects.deleteEvent();
   
 
 
@@ -167,6 +159,8 @@ document.addEventListener('keydown', function(e) {
       navBar.closeDropdownMenu();
     } else if (Projects.toggleNewForm === true) {
       Projects.closeNewForm();
+    } else if (Projects.toggleDelProjBtn) {
+      Projects.closeDelProjBtn();
     } else if (Todo.toggleNewForm === true) {
       Todo.closeNewForm();
     }
