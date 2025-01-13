@@ -105,7 +105,58 @@ const F = {
     var minDate = today.toISOString().split('T')[0]; // Format date as YYYY-MM-DD
     document.getElementById(inputId).setAttribute('min', minDate);
   },
+  /**
+   * Create a .txt file and open the download window.
+   * @param {string} filename - Name of the created file (no extension)
+   * @param {any} text - The text to be saved to the file
+   * @param {boolean} json - If true then the text will be converted to JSON
+   */
+  downloadTxtFile(filename, text, json) {
+    let content = text;
+    if (json) { content = JSON.stringify(text)};
+    let element = document.createElement('a');
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(content));
+    element.setAttribute('download', `${filename}.txt`);
+    element.style.display = 'none';
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+  },
+  /**
+   * Create a mask to cover elements of the background. Element Id: 'bcg-mask'
+   * @param {number} zIndex - Sets the z-index of the mask
+   * @param {string} color - Sets the color of the mask
+   * @param {number} opacity - Sets the opacity of the mask | 0 - invisible | 1 - solid
+   * @param {boolean} remove - Adds an event listener to remove the mask if it is clicked
+   */
+  addBackgroundMask(zIndex, color, opacity, remove) {
+    const mask = document.createElement('div');
+    mask.id = 'bcg-mask';
+    mask.style.display = 'block';
+    mask.style.width = '200vw';
+    mask.style.height = '200vh';
+    mask.style.overflow = 'hidden';
+    mask.style.backgroundColor = color;
+    mask.style.opacity = opacity;
+    mask.style.position = 'fixed';
+    mask.style.top = '0';
+    mask.style.left = '0';
+    mask.style.zIndex = zIndex;
+    document.body.appendChild(mask);
+    if (remove) {
+      mask.addEventListener('click', (e) => {
+        this.removeBackgroundMask();
+      })
+    }
+  },
+  /**
+   * Remove the mask created by this.addBackgroundMask().
+   */
+  removeBackgroundMask() {
+    const mask = document.getElementById('bcg-mask');
+    if (mask) { mask.remove(); };
+  },
 }
 
-
 export { F };
+

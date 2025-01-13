@@ -1,6 +1,6 @@
 'use strict'
 
-const Errors = {
+const newProjectFormErrors = {
   handleNewProjectFormInputErrors(name, dueDate, nameInput, dateInput) {
     const errorMsg = document.querySelector('.form-error');
     nameInput.addEventListener('input', (e) => {
@@ -40,4 +40,4 @@ const Errors = {
   },
 }
 
-export { Errors };
+export { newProjectFormErrors };

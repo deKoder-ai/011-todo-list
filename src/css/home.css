@@ -1,3 +1,14 @@
+#mask-page {
+  display: none;
+  width: 200vw;
+  height: 200vh;
+  overflow: hidden;
+  background-color: rgba(255, 105, 180, 0.329);
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 3000;
+}
 
 #home-grid {
   width: 100%;
@@ -148,19 +159,56 @@
   justify-content: space-between;
   align-items: center;
 }
-#project-title {
-  font-size: 2.5rem;
+
+#project-title-div {
   width: 50%;
-  text-align: left;
   margin-left: 30px;
 }
+#project-title {
+  display: block;
+  font-size: 2.5rem;
+  text-align: left;
+  width: 100%;
+}
+#project-title-edit {
+  /* display: none; */
+  top: 7rem;
+  left: 40.5rem;
+  font-size: 2.5rem;
+  text-align: left;
+  width: 35rem;
+  padding: 0.2rem 1rem;
+  font-size: 1.8rem;
+  outline: 1px solid black;
+  border-radius: 7px;
+  margin-top: 0.4rem;
+  margin-bottom: 0.4rem;
+  box-shadow: none;
+}
+
 #project-title-head h3 {
+  /* display: none; */
   font-size: 1.8rem;
   width: 50%;
   font-weight: 500;
   text-align: right;
   margin-right: 50px;
 }
+#date-head {
+  display: block;
+}
+#main-due-date-edit {
+  display: none;
+  font-size: 0.1rem;
+  /* background: none; */
+  margin-right: 50px;
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50px;
+  padding-left: 0.7rem;
+}
+
+
 #priority-head {
   text-align: center;
 }
@@ -575,24 +623,27 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 #mask-bcg {
   display: block;
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;
+  top: -1000px;
+  left: -1000px;
+  width: 5000px;
+  height: 5000px;
   background-color: rgba(0, 0, 0, 0.795);
   z-index: 30;
-  overflow-y: auto;
+}
+.overflow-hidden {
+  overflow: hidden;
 }
 
 #del-proj-btn {
-  position: absolute;
-  top: 18.5%;
+  /* position: absolute; */
+  /* top: 18.5%; */
   /* transform: translateY(-50%); */
-  left: 50%;
-  transform: translateX(-50%);
-  width: 17%;
+  /* left: 50%; */
+  /* transform: translateX(-50%); */
+  color: white;
+  max-width: 20%;
   background-color: var(--red);
-  outline: 2px solid black;
+  /* outline: 2px solid black; */
   margin: 2rem 2rem;
   font-size: 1.8rem;
   border-radius: 15px;
@@ -602,5 +653,23 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 #del-proj-btn:hover,
 #del-proj-btn:focus {
   font-weight: 600;
-  box-shadow: 5px 5px 7px black;
+  box-shadow: 5px 5px 7px rgba(0, 0, 0, 0.699);
+}
+
+.file-input-div {
+  display: block;
+  padding: 2.5rem;
+  padding-top: 2.8rem;
+}
+#file-input {
+  display: block;
+  width: 50rem;
+  padding: 0.5rem 1rem;
+  margin-top: 0.5rem;
+}
+#file-submit-btn {
+  margin-bottom: 1.4rem;
+}
+#restore-form-div {
+  top: 100px;
 }

@@ -4,11 +4,13 @@ import './css/reset.css';
 import './css/styles.css';
 import './css/nav.css';
 import homeHtml from './html/home.html';
-import { navBar } from './js/nav.js';
+import { navBar } from './js/nav.js'; // z-index: 2000;
 import { Todo } from './js/Todo.js';
 import { F } from './js/Functions.js';
 import { Projects } from './js/Projects.js';
+import { LeftSidebar } from './js/projects/LeftSidebar.js';
 import { Undo } from './js/Undo.js';
+import { RestoreProjects } from './js/projects/restoreProjects.js';
 // import { todoEdit } from './js/xx.js';
 // import odinImage from "./img/odin-lined.png";
 
@@ -18,22 +20,16 @@ import { todoEdits } from './js/todoEdits.js';
 import homeCss from './css/home.css';
 
 const logClickedElement = 0; // 0 - no log | 1 - log element
-
-// Projects.list = Undo.history[Undo.history.length - 1];
-
-// localStorage.clear();
-
+if (false) { localStorage.clear(); };
 
 
 const contentDiv = document.getElementById('content');
 
-// const image = document.createElement("img");
-// image.src = odinImage;
-// contentDiv.appendChild(image);
+let ctrlIsPressed = false;
+let altIsPressed = false;
 
+document.addEventListener('DOMContentLoaded', () => {
 
-
-document.addEventListener('DOMContentLoaded', function() {
   navBar.addToDOM();
   Undo.initialize();
   Undo.keyEvents(Projects.restore, Projects.list);
@@ -49,13 +45,14 @@ document.addEventListener('DOMContentLoaded', function() {
   // fill content element with homeHtml - this will be done conditionally later
   document.getElementById('content').innerHTML = homeHtml;
 
-  Projects.updateCount();
-  Projects.populateProjectsListDiv();
+  LeftSidebar.updateCount();
+  LeftSidebar.populateProjectsListDiv();
+  LeftSidebar.deleteProjectEvent();
 
 
-  Projects.deleteEvent();
   
 
+  
 
   // const pageContent = document.getElementById('content');
   Projects.displayProjectContent(0);
@@ -78,11 +75,11 @@ document.addEventListener('DOMContentLoaded', function() {
               break;
           case 'nav-btn-1':
           case 'dropdown-item-1':
-            console.log('Nav Link 1');
+            F.downloadTxtFile('projectsRestore', Projects.list, true);
             break;
           case 'nav-btn-2':
           case 'dropdown-item-2':
-            console.log('Nav Link 2');
+            RestoreProjects.openFileUploadForm();
             break;
           case 'nav-btn-3':
           case 'dropdown-item-3':
@@ -103,14 +100,14 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('projects-btn');
             break;
           case 'add-project-btn':
-            Projects.newForm();
+            LeftSidebar.openNewProjectForm();
             break;
           case 'close-np-form':
-            Projects.closeNewForm();
+            LeftSidebar.closeNewProjectForm();
             break;
           case 'new-project-submit-btn':
               e.preventDefault();
-              Projects.new();
+              LeftSidebar.createNewProject();
               // console.log(Projects.list);
             break;
           
@@ -125,46 +122,61 @@ document.addEventListener('DOMContentLoaded', function() {
             e.preventDefault();
             Todo.new();
             break;
+          case 'close-restore-form':
+            RestoreProjects.closeFileUploadForm();
+            break;
 
 
 
 
-          case 'mask-page':
-            if (Projects.toggleNewForm === true) {
-              Projects.closeNewForm();
-            } else if (Todo.toggleNewForm === true) {
-              Todo.closeNewForm();
-            }
+          case 'bcg-mask':
+            if (LeftSidebar.toggleNewProjectForm) { LeftSidebar.closeNewProjectForm(); }
+            if (LeftSidebar.toggleDelProjBtn) { LeftSidebar.closeDelProjBtn(); }
+            if (Todo.toggleNewForm) { Todo.closeNewForm(); }
+            if (RestoreProjects.toggleFileUploadForm) { RestoreProjects.closeFileUploadForm(); }
             break;
           default:
-            if (navBar.dropdownToggle === true) {
+            if (navBar.dropdownToggle) {
               navBar.closeDropdownMenu();
             }
             break;
       }
   });
 
-
-
-  
-  
-
-
-
-});
-
-document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') {
-    if (navBar.dropdownToggle === true) {
-      navBar.closeDropdownMenu();
-    } else if (Projects.toggleNewForm === true) {
-      Projects.closeNewForm();
-    } else if (Projects.toggleDelProjBtn) {
-      Projects.closeDelProjBtn();
-    } else if (Todo.toggleNewForm === true) {
-      Todo.closeNewForm();
+  // keyboard events
+  document.addEventListener('keydown', (e) => {
+    // console.log(e.key);
+    switch(e.key) {
+      case 'Alt':
+        altIsPressed = true;
+        break;
+      case 'Control':
+        ctrlIsPressed = true;
+        LeftSidebar.ctrlPressed = true;
+        break;
+      case 'Escape':
+        if (document.getElementById('bcg-mask')) { F.removeBackgroundMask(); }
+        if (navBar.dropdownToggle) { navBar.closeDropdownMenu(); }
+        if (LeftSidebar.toggleNewProjectForm) { LeftSidebar.closeNewProjectForm(); }
+        if (Projects.toggleTitleEdit) { Projects.closeEditTitle(); }
+        if (LeftSidebar.toggleDelProjBtn) { LeftSidebar.closeDelProjBtn(); }
+        if (Todo.toggleNewForm) { Todo.closeNewForm(); }
+        if (RestoreProjects.toggleFileUploadForm) { RestoreProjects.closeFileUploadForm(); }
+      case 'n':
+      case 'N':
+        if (altIsPressed) {
+          LeftSidebar.openNewProjectForm();
+        }
     }
-  } else if (e.key === '+') {
-    Projects.newForm();
-  }
+  });
+  
+  document.addEventListener('keyup', (e) => {
+    if (e.key === 'Alt') { altIsPressed = false };
+    if (e.key === 'Control') { 
+      ctrlIsPressed = false;
+      LeftSidebar.ctrlPressed = false;
+    }
+  });
+
 });
+

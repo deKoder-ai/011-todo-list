@@ -64,11 +64,13 @@ localStorage uses JSON to send and store data, and when you retrieve the data, i
  - Save projects and todo lists to local machine - ✔
  - Refactor undo to separate module and fix bug that crashes when undo is clicked beyond last undo - ✔
 
+ - Add ability to edit project name and date from main content section
+ - Try saving HTML to local storage to fix bug below
  - Fix edit todo bug - always selects the first row instead of the clicked one. This used to work >:/
     I think this is related to the way the todo lists are populated on project initialisation
  - Fix edit bug where edit mode is locked on if the user clicks another project or page
  - Function to delete todo list items - backup local storage before deletion to allow undo
- - ctrl click to delete todo item?
+ - ctrl click to delete todo item or add individual buttons
  - Refactor case 'notes': in todoEdits.js
  - Color changes with priority
  - Show days remaining till task or project due
@@ -105,3 +107,13 @@ Refactor Undo and Projects
  - Add restore function to Projects to be fed into Undo.initialize as a parameter
  - Repopulate project list instead of page refresh
  - Refactor Undo to separate events and initialize
+
+
+// commit
+
+
+ - Add ability to backup Projects.list to json text file
+ - Add functions to create and remove background masks to Functions.js
+ - Refactor project sidebar function from Projects.js to LeftSidebar.js
+ - Refactor keypress events in index.js
+ - Add ability to restore projects from .txt file

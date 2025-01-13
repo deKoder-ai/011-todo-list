@@ -1,5 +1,3 @@
-<!-- <div id="mask-page" class="mask-page"></div> -->
-
 <div id="home-grid">
   <div id="left-sidebar">
     <div id="left-sidebar-head">
@@ -11,7 +9,7 @@
       </div>
     </div>
     <div id="left-sidebar-projects">
-      <!-- populate list from Projects.js      -->
+      <!-- populate list from Projects.js -->
     </div>
   </div>
   
@@ -20,8 +18,14 @@
     <!-- todo content -->
     <div id="project-head">
       <div id="project-title-head">
-        <h2 id="project-title">Project Title</h2>
-        <h3>Due Date: <span id="main-due-date"></span></h3>
+        <div id="project-title-div">
+          <h2 id="project-title">Project Title</h2>
+          <!-- <input type="text" id="project-title-edit"> -->
+        </div>
+        <div id="main-due-date-div">
+          <h3 id="date-head">Due Date: <span id="main-due-date"></span></h3>
+          <input type="date" name="main-due-date-edit" id="main-due-date-edit">
+        </div>
       </div>
       <div id="todo-head">
         <div id="edit-instructions">
