@@ -6,7 +6,6 @@ const Undo = {
   storageType: 'localStorage', // sessionStorage
   storageAvailable: false,
   storage: undefined,
-  ctrlPressed: false,
   /**
    * Set the type of storage to be used for undo history.
    * @param {string} type - The storage type (e.g. 'localStorage', 'sessionStorage')
@@ -24,23 +23,23 @@ const Undo = {
     }
     this.storageAvailable = this.storageAvailable(type);
   },
-    /**
+  /**
    * Check if the given storage type is available.
    * @param {string} type - The storage type to check (e.g. 'localStorage', 'sessionStorage')
    * @returns {boolean} Whether the storage type is available
    */
-    storageAvailable(type) {
-      try {
-        const storage = window[type]; // Ensure that storage is defined, even in browsers without support for window[type]
-        const x = "__storage_test__";
-        storage.setItem(x, x);
-        storage.removeItem(x);
-        return true;
-      } catch (e) {
-        console.error(`Error: Undo storage type ${type} is not available}`);
-        return false;
-      }
-    },
+  storageAvailable(type) {
+    try {
+      const storage = window[type]; // Ensure that storage is defined, even in browsers without support for window[type]
+      const x = "__storage_test__";
+      storage.setItem(x, x);
+      storage.removeItem(x);
+      return true;
+    } catch (e) {
+      console.error(`Error: Undo storage type ${type} is not available}`);
+      return false;
+    }
+  },
   /** 
    * Remove oldest undo history items when the history array exceeds the 
    * maximum length. */
@@ -113,29 +112,21 @@ const Undo = {
    */
   keyEvents(restore, item) {
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Control') {
-        this.ctrlPressed = true;
-      }
-    });
-    document.addEventListener('keyup', (e) => {
-      if (e.key === 'Control') {
-        this.ctrlPressed = false;
-      }
-    });
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'z' || e.key === 'Z') {
-        const length = this.history.length
-        if (length <= 0 || item === this.history[length - 1]) {
-          alert('Nothing to undo');
-        } else {
-          const lastItem = this.history.pop();
-          // run restore function passed as parameter
-          restore(lastItem);
-          try {
-            this.storage.setItem(this.storageKey, JSON.stringify(this.history));
-          } catch (e) {
-            console.error(e);
-            console.log('Error writing undo history to storage');
+      if (e.ctrlKey) {
+        if (e.key === 'z' || e.key === 'Z') {
+          const length = this.history.length
+          if (length <= 0 || item === this.history[length - 1]) {
+            alert('Nothing to undo');
+          } else {
+            const lastItem = this.history.pop();
+            // run restore function passed as parameter
+            restore(lastItem);
+            try {
+              this.storage.setItem(this.storageKey, JSON.stringify(this.history));
+            } catch (e) {
+              console.error(e);
+              console.log('Error writing undo history to storage');
+            }
           }
         }
       }

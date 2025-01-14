@@ -1,13 +1,30 @@
+'use strict'
+
 const F = {
-  newElement(type, content, classes, _id) {
-    const element = document.createElement(type);
-    if (content) {element.innerHTML = content;}
+  /**
+   * Create a new HTML element.
+   * 
+   * See here for a comprehensive list of HTML tags: https://developer.mozilla.org/en-US/docs/Web/HTML/Element
+   * @param {string} tag - Name of the created file (no extension)
+   * @param {any} content - The text or HTML content of the new element
+   * @param {string|Array} classes - The class or classes to be applied to the new element. This can be a string for a single class or an array for multiple classes (eg. ['a', 'b', 'c'])
+   * @param {string} id - The ID for the new element
+   * @returns {Object} The generated HTML element
+   */
+  htmlElement(tag = 'div', content, classes, id) {
+    const element = document.createElement(tag);
+    if (content) { element.innerHTML = content; }
     if (classes) {
-      for (let _class of classes) {
-        element.classList.add(_class);
-      }
-    };
-    if (_id) {element.id = _id};
+      if (typeof classes === 'string') 
+        { 
+          element.classList.add(classes); 
+        } else if (typeof classes === 'object') {
+        for (let item of classes) {
+          element.classList.add(item);
+        }
+      };
+    }
+    if (id) { element.id = id };
     return element;
   },
   // create table (no header)
@@ -27,7 +44,10 @@ const F = {
     }
     return table;
   },
-  // clear HTML
+  /**
+   * Clears the content of an HTML element.
+   * @param {Object} element - The HTML element to clear
+   */
   clearHTML(element) {
     element.innerHTML = '';
   },
@@ -52,13 +72,19 @@ const F = {
       return undefined;
     }
   },
-  reduceString(str, len) {
-    if (str.length > len) {
-      return `${str.slice(0, len)}...`
-    } else {
-      return str;
-    }
-    
+  /**
+  * Truncate a supplied string to the given length and adds optional ellipsis.
+  * @param {string} str - The string to be truncated
+  * @param {number} length - Maximum length of the output string
+  * @param {boolean} ellipsis - Adds an ellipsis (...) to the truncated string if true
+  * @returns {string} The newly truncated string
+  */
+  truncateString(str, length, ellipsis = true) {
+    if (str.length > length) { 
+      str = str.slice(0, length);
+      if (ellipsis) { str = `${str}...`}; 
+    };
+    return str;
   },
   /**
   * Check if the given storage type is available.
@@ -100,6 +126,14 @@ const F = {
     }
     return keys;
   },
+  /**
+   * Clear local or session storage.
+   * @param {string} type - 'local' clears localStorage. 'session' clears sessionStorage. If blank, do nothing
+   */
+  clearBrowserStorage(type) {
+    if (type === 'local') { localStorage.clear(); }
+    if (type === 'session') { sessionStorage.clear(); }
+  },
   setMinDateToToday(inputId) {
     var today = new Date();
     var minDate = today.toISOString().split('T')[0]; // Format date as YYYY-MM-DD
@@ -107,7 +141,7 @@ const F = {
   },
   /**
    * Create a .txt file and open the download window.
-   * @param {string} filename - Name of the created file (no extension)
+   * @param {string} filename - Name of the created file (no extension needed)
    * @param {any} text - The text to be saved to the file
    * @param {boolean} json - If true then the text will be converted to JSON
    */
@@ -153,10 +187,78 @@ const F = {
    * Remove the mask created by this.addBackgroundMask().
    */
   removeBackgroundMask() {
-    const mask = document.getElementById('bcg-mask');
-    if (mask) { mask.remove(); };
+    let mask = document.getElementById('bcg-mask');
+    if (mask) {
+      mask = document.getElementById('bcg-mask');
+      mask.remove();
+      mask = document.getElementById('bcg-mask');
+      if (mask) { 
+        this.removeBackgroundMask();
+      }
+    }
+  },
+  /**
+   * Add a CSS outline to the global selector (*) to help visualize HTML document layout.
+   * @param {boolean} bool - True applies the outline to all elements
+   * @param {number} width - Sets the width of the outline in pixels (default: 1)
+   * @param {string} style - Sets the outline style. (eg. solid, dashed or dotted) (default: dashed)
+   * @param {string} color - Sets the color of the outline  (default: blue)
+   */
+  addOutlineToAllElements(bool, width = 1, style = 'dashed', color = 'blue') {
+    if (bool) {
+      var styleElement = document.createElement('style');
+      styleElement.innerHTML = `* {outline: ${width}px ${style} ${color}}`;
+      document.head.appendChild(styleElement);
+    }
+  },
+  /**
+   * Trigger a function in response to a document event.
+   * 
+   * See: https://dbchung3.medium.com/add-event-listener-dom-event-types-6c10a844c9d8 for more information on event types.
+   * See: https://developer.mozilla.org/en-US/docs/Web/API/Event for (e) methods and properties.
+   * @param {function} eventHandler - The function to run in response to an event
+   * @param {boolean} log - Log the event target to the console if true (default: false)
+   * @param {string} type - The type of event to trigger the logic function (default: 'click')
+   * @param {boolean} preventDefault - If true, prevents the default action of the event
+   */
+  EventHandler: function (processEvent, type = 'click', log = 'false', preventDefault = 'false') {
+    this.processEvent = processEvent;
+    this.type = type;
+    this.log = log;
+    this.preventDefault = preventDefault;
+
+    document.addEventListener(type, (e) => {
+      if (this.preventDefault === true || this.preventDefault === 1) { e.preventDefault(); }
+      // logging
+      if (this.log === true || this.log === 1) {
+        if (this.type === 'click') { F.log(`Single click on:`); }
+        if (this.type === 'dblclick') { console.log(`Double click on:`) };
+        if (this.type === 'contextmenu') { console.log(`Right click on:`) };
+        if (this.type === 'keydown') { console.log(`${e.key} key pressed`) };
+        if (this.type === 'keyup') { console.log(`${e.key} key up`) };
+        if (this.type !== 'keydown' && this.type !== 'keyup') { F.log(e.target); }
+      }
+      // run supplied function
+      this.processEvent(e);
+    });
+  },
+  /**
+   * Shorthand for console.log().
+   * @param {any} item - The item to log to the console.
+   */
+  log(item) {
+    console.log(item);
+  },
+}
+
+const Y = {
+  sayHello() {
+    this.cl('Hello')
   },
 }
 
 export { F };
+
+
+
 

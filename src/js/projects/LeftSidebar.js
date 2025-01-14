@@ -8,11 +8,10 @@ import newProjectForm from '../../html/newProjectForm.html';
 const LeftSidebar = {
   toggleNewProjectForm: false,
   toggleDelProjBtn: false,
-  ctrlPressed: false,
   openNewProjectForm() { // formerly newForm
     F.addBackgroundMask(3000, '#000000', 0.4, true);
     const mainContent = document.getElementById('main-content');
-    const formContainer = F.newElement('div', newProjectForm, '', 'temp');
+    const formContainer = F.htmlElement('div', newProjectForm, '', 'temp');
     mainContent.appendChild(formContainer);
     document.getElementById('new-project-name').focus();
     this.toggleNewProjectForm = true;
@@ -49,11 +48,11 @@ const LeftSidebar = {
   createNewProjectBtn(project, id) {
     if (project.name && project.dueDate) {
       const date = project.dueDate;
-      const btnDiv = F.newElement('div', '', ['project-btn-div'], `project-btn-div-${id}`);
-      const appendProjName = F.reduceString(project.name, 14);
-      const nameP = F.newElement('p', `- ${appendProjName}`);
-      const dateP = F.newElement('p', `${date}`, ['project-btn-date-p']);
-      const newItemBtn = F.newElement('button', '', ['project-btn'], `project-btn-${id}`);
+      const btnDiv = F.htmlElement('div', '', ['project-btn-div'], `project-btn-div-${id}`);
+      const appendProjName = F.truncateString(project.name, 14);
+      const nameP = F.htmlElement('p', `- ${appendProjName}`);
+      const dateP = F.htmlElement('p', `${date}`, ['project-btn-date-p']);
+      const newItemBtn = F.htmlElement('button', '', ['project-btn'], `project-btn-${id}`);
       const components = [btnDiv, nameP, dateP];
       this.addBtnEvents(newItemBtn, components, id);
       btnDiv.appendChild(nameP);
@@ -91,8 +90,8 @@ const LeftSidebar = {
   },
   deleteProjectEvent() {
     // Capture clicks on a specific element
-    document.getElementById('left-sidebar-projects').addEventListener('click', (e) => {
-      if (this.ctrlPressed) {
+    document.getElementById('left-sidebar-projects').addEventListener('dblclick', (e) => {
+      if (e.ctrlKey) {
           this.toggleDelProjBtn = true;
           F.addBackgroundMask(3000, '#000000', 0.4, true);
 
@@ -103,9 +102,10 @@ const LeftSidebar = {
           const parentId = `${idSplit[0]}-${idSplit[1]}-div-${idSplit[2]}`;
           let projectBtn = document.getElementById(parentId);
 
-          const delBtnText = `Delete Project: ${F.reduceString(project.name, 15)}`;
-          const delProjBtn = F.newElement('button', delBtnText, ['form-container'], 'del-proj-btn');
+          const delBtnText = `Delete Project: ${F.truncateString(project.name, 15)}`;
+          const delProjBtn = F.htmlElement('button', delBtnText, ['form-container'], 'del-proj-btn');
           document.body.appendChild(delProjBtn);
+          delProjBtn.focus();
 
           delProjBtn.addEventListener('click', (e) => {
             Undo.write(Projects.list);

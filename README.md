@@ -63,18 +63,25 @@ localStorage uses JSON to send and store data, and when you retrieve the data, i
  - add undo functionality - ✔
  - Save projects and todo lists to local machine - ✔
  - Refactor undo to separate module and fix bug that crashes when undo is clicked beyond last undo - ✔
+ - Add ability to edit project name and date from main content section - ✔
+ - Fix edit todo bug - always selects the first row instead of the clicked one. This used to work - ✔
+    I think this is related to the way the todo lists are populated on project initialisation - ✔
+ - Added delete task module - ✔
+ 
 
- - Add ability to edit project name and date from main content section
- - Try saving HTML to local storage to fix bug below
- - Fix edit todo bug - always selects the first row instead of the clicked one. This used to work >:/
-    I think this is related to the way the todo lists are populated on project initialisation
  - Fix edit bug where edit mode is locked on if the user clicks another project or page
- - Function to delete todo list items - backup local storage before deletion to allow undo
+    will be solved by adding mask
  - ctrl click to delete todo item or add individual buttons
  - Refactor case 'notes': in todoEdits.js
  - Color changes with priority
  - Show days remaining till task or project due
  - Function to sort list order by due date/alphabetically/whatever
+ - Add a page to be displayed when the Projects button is clicked to show all projects as tiles
+ - Add a number of todo tasks count
+ - Fix checkbox issue - needs a refresh before can edit else throws error
+ - Fix checkbox issue - not updating/storing status
+ - Fix display notes issue
+ - Fix Project title and date sitting above mask issue
 
 // committed 11/01/25
 Add logic to switch between projects and adjust notes display formatting
@@ -109,11 +116,21 @@ Refactor Undo and Projects
  - Refactor Undo to separate events and initialize
 
 
-// commit
-
+// committed 13/01/25
+Refactor Projects and index, add mask function, add save/restore function
 
  - Add ability to backup Projects.list to json text file
  - Add functions to create and remove background masks to Functions.js
  - Refactor project sidebar function from Projects.js to LeftSidebar.js
  - Refactor keypress events in index.js
  - Add ability to restore projects from .txt file
+
+// committed 14/01/25
+Refactoring and bug hunting
+
+ - Refactor edit function for Project Name and Due Date
+ - Fix edit todo bug - always selected the first row instead of the clicked one
+ - Refactor TodoEdits.js to allow undo of td list item changes
+ - Add dev functions to Function.js + refactor existing functions and JSDocs
+ - Fix checkbox bug - checked status and Projects.list done are now linked
+ - Add deleteTask module to remove items from the todo list

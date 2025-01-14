@@ -3,6 +3,8 @@ import { F } from './Functions.js';
 import { Undo } from './Undo.js';
 import noteEditHtml from '../html/notesEdit.html';
 
+// F.addBackgroundMask(3000, '#000000', 0.4, true);
+
 const todoEdits = {
   editing: false,
   projId: undefined,
@@ -16,7 +18,7 @@ const todoEdits = {
   addMaskToDOM() {
     const content = document.getElementById('content');
     console.log(content);
-    this.mask = F.newElement('div', '', ['mask-bcg'], 'mask-bcg');
+    this.mask = F.htmlElement('div', '', ['mask-bcg'], 'mask-bcg');
     // this.mask.addEventListener('click', function(e) {
     //   if (e.target.id === 'mask-bcg') {
     //     todoEdits.closeNewForm();
@@ -74,6 +76,7 @@ const todoEdits = {
         
         switch(todoEdits.taskItemKey) {
           case 'task':
+            F.addBackgroundMask(3000, '#000000', 0.2, true);
             // todoEdits.addMaskToDOM();
             console.log(id);
             todoEdits.showInstructions(true);
@@ -110,7 +113,7 @@ const todoEdits = {
             // todoEdits.tdiEdit.style.display = 'block';
             todoEdits.editing = true;
             const todoHeadDiv = document.getElementById('todo-head');
-            const editNoteDiv = F.newElement('div', '', '', 'edit-note');
+            const editNoteDiv = F.htmlElement('div', '', '', 'edit-note');
             editNoteDiv.innerHTML = noteEditHtml;
 
             // todoHeadDiv.appendChild(editNoteDiv);
@@ -153,20 +156,21 @@ const todoEdits = {
             });
             const editBtn = document.getElementById('notes-edit-submit');
             editBtn.addEventListener('click', function(e) {
+              Undo.write(Projects.list);
               let newValue = notesTextarea.value;
               todoEdits.updateTodoListData(newValue);
-              todoEdits.tdiInfo.innerHTML = F.reduceString(newValue, 20);
+              todoEdits.tdiInfo.innerHTML = F.truncateString(newValue, 20);
               todoEdits.editing = false;
               editNoteDiv.remove();
               todoEdits.removeMask();
               F.writeToLocalStorage('projectsList', Projects.list);
-              Undo.write(Projects.list);
             })
             break;
           case 'done':
+            Undo.write(Projects.list);
             todoEdits.updateDone(id);
             F.writeToLocalStorage('projectsList', Projects.list);
-            Undo.write(Projects.list);
+            
             break;
           default:
             break;
@@ -177,6 +181,7 @@ const todoEdits = {
   switchToEditDisplay() {
     this.tdiInfo.style.display = 'none';
     this.tdiEdit.style.display = 'block';
+    this.tdiEdit.classList.add('current-td-edit'); // remove this class when editing complete
     this.tdiEdit.focus();
     this.editing = true;
   },
@@ -188,6 +193,7 @@ const todoEdits = {
       this.editing = false;
       this.showInstructions(false);
     } else if (e.key === 'Enter') {
+      Undo.write(Projects.list);
       let newValue = this.tdiEdit.value;
       if (this.taskItemKey === 'dueDate') {newValue = F.dateToUKStr(newValue)};
       this.updateTodoListData(newValue);
@@ -197,7 +203,6 @@ const todoEdits = {
       this.editing = false;
       this.showInstructions(false);
       F.writeToLocalStorage('projectsList', Projects.list);
-      Undo.write(Projects.list);
     }
     this.tdiEdit.removeEventListener('keydown', function(e) {
       todoEdits.handleKeyPress(e);

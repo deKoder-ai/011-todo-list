@@ -1,5 +1,3 @@
-/* * { outline: 1px dashed blue; } */
-
 /* @font-face {
   font-family: topsecret;
   src: url('../fonts/top-secret.ttf');
@@ -18,6 +16,7 @@ html {
 }
 body {
   background-color: rebeccapurple;
+  overflow: hidden;
 }
 #content {
   margin-top: var(--nav-bar-height);;

@@ -12,12 +12,12 @@ const RestoreProjects = {
     this.toggleFileUploadForm = true;
     F.addBackgroundMask(3000, '#000000', 0.4, true);
     const mainContent = document.getElementById('main-content');
-    const formContainer = F.newElement('div', restoreForm, '', 'temp');
+    const formContainer = F.htmlElement('div', restoreForm, '', 'temp');
     formContainer.style.marginTop = '-200px';
     mainContent.appendChild(formContainer);
     const fileInput = document.getElementById('file-input');
     const restoreBtn = document.getElementById('file-submit-btn');
-    const errorMsg = F.newElement('p', 'Please select a file to restore projects from', ['form-error']);
+    const errorMsg = F.htmlElement('p', 'Please select a file to restore projects from', ['form-error']);
     fileInput.focus();
     this.handleNoFileError(fileInput, restoreBtn, errorMsg);
     this.handleFileUpload(fileInput, restoreBtn, errorMsg);

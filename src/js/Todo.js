@@ -7,35 +7,18 @@ import todoItemHtml from '../html/todoItem.html';
 class itemHtml {
   constructor(html, task) {
     this.html = new String(html);
-    this.div = F.newElement('div', ``, ['todo-item']);
+    this.div = F.htmlElement('div', ``, ['todo-item']);
     this.task = task;
   }
 }
 
 const Todo = {
   toggleNewForm: false,
-  mask: undefined,
-  addMaskToDOM() {
-    const content = document.getElementById('content');
-    console.log(content);
-    this.mask = F.newElement('div', '', ['mask-bcg'], 'mask-bcg');
-    this.mask.addEventListener('click', function(e) {
-      if (e.target.id === 'mask-bcg') {
-        Todo.closeNewForm();
-      }
-    });
-    content.appendChild(this.mask);
-  },
-  removeMask() {
-    this.mask.remove();
-    this.mask = undefined;
-  },
+
   newForm() {
-    // const mask = document.getElementById('mask-page');
-    // mask.style.display = 'block';
-    this.addMaskToDOM();
+    F.addBackgroundMask(3000, '#000000', 0.4, true);
     const mainContent = document.getElementById('main-content');
-    const container = F.newElement('div', newTaskForm, '', 'temp');
+    const container = F.htmlElement('div', newTaskForm, '', 'temp');
     mainContent.appendChild(container);
     document.getElementById('new-task-name').focus();
     this.toggleNewForm = true;
@@ -45,7 +28,7 @@ const Todo = {
     document.getElementById('temp').remove();
     // const maskPage = document.getElementById('mask-page');
     // maskPage.style.display = 'none';
-    this.removeMask();
+    F.removeBackgroundMask();
     this.toggleNewForm = false;
   },
   new() {
@@ -71,6 +54,8 @@ const Todo = {
       F.writeToLocalStorage('projectsList', Projects.list);
       Undo.write(Projects.list);
       this.appendTaskToDOM(newTask);
+      // this.appendTaskToDOM(Projects.list[id].todoList[Projects.list[id].todoList.length - 1])
+      F.log(newTask);
       this.closeNewForm();
       return true;
     } else { // else handle input errors
@@ -102,18 +87,18 @@ const Todo = {
       }
     });
   },
-  itemHtml(task) {
+  itemHtml(task, id) {
     const html = new itemHtml(todoItemHtml, task);
     const projId = Projects.currentProjId;
     // will need to remove the - 1 below if save html instead of raw data
-    const todoId = Projects.list[projId].todoList.length - 1;
+    const todoId = id //Projects.list[projId].todoList.length - 1;
 
     html.div.innerHTML = html.html;
 
     // fill content
     const divChildren = html.div.children;
 
-    divChildren[0].children[0].innerHTML = F.reduceString(task.task, 60);
+    divChildren[0].children[0].innerHTML = F.truncateString(task.task, 60);
     divChildren[0].children[0].id = `tdi-proj-${projId}-todo-${todoId}-task`;
     divChildren[0].children[1].value = task.task;
     divChildren[0].children[1].id = `tdi-proj-${projId}-todo-${todoId}-task-edit`;
@@ -134,10 +119,10 @@ const Todo = {
       if (notesArray[0].length < 20) {
         notesDisplayStr = `${notesArray[0]}...`;
       } else {
-        notesDisplayStr = F.reduceString(notesArray[0], 20);
+        notesDisplayStr = F.truncateString(notesArray[0], 20);
       }
     } else {
-      notesDisplayStr = F.reduceString(task.notes, 20);
+      notesDisplayStr = F.truncateString(task.notes, 20);
     }
 
     // const notesDisplayStr = this.formatNotesDisplay(task.notes)
@@ -145,6 +130,14 @@ const Todo = {
     divChildren[3].children[0].id = `tdi-proj-${projId}-todo-${todoId}-notes`;
 
     divChildren[4].children[0].id = `tdi-proj-${projId}-todo-${todoId}-done`;
+    if (Projects.list[projId].todoList.done) {
+      if (Projects.list[projId].todoList[todoId].done) {
+        divChildren[4].children[0].checked = true;
+      }
+    }
+
+    divChildren[5].children[0].id = `del-proj-${projId}-todo-${todoId}-done`;
+
 
 
     // const todoListDiv = document.getElementById('todo-list');
@@ -156,18 +149,18 @@ const Todo = {
       if (notesArray[0].length < 20) {
         return `${notesArray[0]}...`;
       } else {
-        return F.reduceString(notesArray[0], 20);
+        return F.truncateString(notesArray[0], 20);
       }
     } else {
-      return F.reduceString(task.notes, 20);
+      return F.truncateString(task.notes, 20);
     }
   },
 
 
 
 
-  appendTaskToDOM(task) {
-    const taskHtml = this.itemHtml(task);
+  appendTaskToDOM(task, id) {
+    const taskHtml = this.itemHtml(task, id);
     const todoListDiv = document.getElementById('todo-list');
     todoListDiv.appendChild(taskHtml);
   },
@@ -183,10 +176,10 @@ const Todo = {
     return todoItem;
   },
   addToDOM(todoItem) {
-    const todoList = F.newElement('div', '', ['todo-list']);
+    const todoList = F.htmlElement('div', '', ['todo-list']);
     const mainContent = document.getElementById('main-content');
     for (const item of todoItem) {
-      const x = F.newElement('p', item);
+      const x = F.htmlElement('p', item);
       todoList.appendChild(x);
     }
     mainContent.appendChild(todoList);

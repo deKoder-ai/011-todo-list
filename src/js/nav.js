@@ -3,28 +3,29 @@ import { F } from './Functions.js';
 
 const navBar = {
   navBar: document.getElementById('nav-bar'),
-  homeBtn: F.newElement('button', 'Home', '' ,'home-btn'),
-  gap: F.newElement('div'),
+  homeBtn: F.htmlElement('button', 'Home', '' ,'home-btn'),
+  gap: F.htmlElement('div'),
   buttons: [
-    F.newElement('button', 'Save Projects', ['nav-bar-btn'], 'nav-btn-1'),
-    F.newElement('button', 'Restore Projects', ['nav-bar-btn'], 'nav-btn-2'),
-    F.newElement('button', 'Link 3', ['nav-bar-btn'], 'nav-btn-3'),
+    F.htmlElement('button', 'Save', ['nav-bar-btn'], 'nav-btn-1'),
+    F.htmlElement('button', 'Restore', ['nav-bar-btn'], 'nav-btn-2'),
+    F.htmlElement('button', 'Docs', ['nav-bar-btn'], 'nav-btn-3'),
   ],
-  dropdownBtn: F.newElement('button', '', '', 'dropdown-btn'),
-  dropdownMenu: F.newElement('div', '', '', 'dropdown-menu'),
+  dropdownBtn: F.htmlElement('button', '', '', 'dropdown-btn'),
+  dropdownMenu: F.htmlElement('div', '', '', 'dropdown-menu'),
   dropdownItems: [
-    F.newElement('button', 'Save Projects', ['dropdown-items'], 'dropdown-item-1'),
-    F.newElement('div', '', ['dropdown-separator']),
-    F.newElement('button', 'Restore Projects', ['dropdown-items'], 'dropdown-item-2'),
-    F.newElement('div', '', ['dropdown-separator']),
-    F.newElement('button', 'Link 3', ['dropdown-items'], 'dropdown-item-3'),
-    F.newElement('div', '', ['dropdown-separator']),
-    F.newElement('button', 'Link 4', ['dropdown-items'], 'dropdown-item-4'),
-    F.newElement('div', '', ['dropdown-separator']),
+    F.htmlElement('button', 'Save Projects', ['dropdown-items'], 'dropdown-item-1'),
+    F.htmlElement('div', '', ['dropdown-separator']),
+    F.htmlElement('button', 'Restore Projects', ['dropdown-items'], 'dropdown-item-2'),
+    F.htmlElement('div', '', ['dropdown-separator']),
+    F.htmlElement('button', 'Documentation', ['dropdown-items'], 'dropdown-item-3'),
+    F.htmlElement('div', '', ['dropdown-separator']),
+    F.htmlElement('button', 'Link 4', ['dropdown-items'], 'dropdown-item-4'),
+    F.htmlElement('div', '', ['dropdown-separator']),
   ],
   dropdownToggle: false,
   openDropdownMenu: function() {
     this.dropdownMenu.style.display = 'block';
+    this.dropdownMenu.style.zIndex = '200000';
     this.dropdownToggle = true;
   },
   closeDropdownMenu: function() {

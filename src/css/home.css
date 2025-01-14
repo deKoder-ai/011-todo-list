@@ -56,24 +56,25 @@
 }
 #add-project-btn {
   position: absolute;
-  top: 15%;
-  right: 2.5%;
-  height: 70%;
-  width: 25px;
+  top: 0px;
+  right: 0;
+  height: 99%;
+  width: 50px;
   background-color: white;
   background-image: url(../img/add-project.svg);
   background-repeat: no-repeat;
   background-position: center center;
-  background-size: 80% 80%;
-  border-radius: 5px;
-  outline: 1px solid rgb(0, 0, 0);
+  background-size: 75% 75%;
+  /* border-radius: 5px; */
+  border-left: 1px solid rgb(0, 0, 0);
 }
 #add-project-btn:hover,
 #add-project-btn:focus {
-  background-size: 87% 87%;
+  background-size: 85% 85%;
   background-color: rgb(146, 146, 236);
   box-shadow: 3px 3px 7px black;
-  outline: 2px solid rgba(0, 0, 0, 0.664);
+  border: 1px solid rgba(0, 0, 0, 0.664);
+  outline: 1px solid rgba(0, 0, 0, 0.664);
 }
 
 .project-btn-div {
@@ -148,21 +149,38 @@
 
 #project-head {
   position: sticky;
-  top: var(--nav-bar-height);
+  top: calc(var(--nav-bar-height) + 6.8rem);
   padding-top: 23px;
   background-color: #a8aac9;
   z-index: 20;
 }
-
 #project-title-head {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-
 #project-title-div {
   width: 50%;
-  margin-left: 30px;
+  margin-left: 3.5rem;
+}
+#main-due-date-div {
+  width: 50%;
+  margin-right: 5rem;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+
+#project-info {
+  position: sticky;
+  top: 7.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 3001;
+  margin-top: 2.5rem;
+  text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.575);
 }
 #project-title {
   display: block;
@@ -171,9 +189,8 @@
   width: 100%;
 }
 #project-title-edit {
-  /* display: none; */
-  top: 7rem;
-  left: 40.5rem;
+  display: none;
+  position: relative;
   font-size: 2.5rem;
   text-align: left;
   width: 35rem;
@@ -183,25 +200,19 @@
   border-radius: 7px;
   margin-top: 0.4rem;
   margin-bottom: 0.4rem;
-  box-shadow: none;
 }
 
-#project-title-head h3 {
-  /* display: none; */
-  font-size: 1.8rem;
-  width: 50%;
-  font-weight: 500;
-  text-align: right;
-  margin-right: 50px;
-}
 #date-head {
   display: block;
+  font-size: 2rem;
+  width: 100%;
+  font-weight: 500;
+  text-align: right;
 }
 #main-due-date-edit {
+  position: relative;
   display: none;
   font-size: 0.1rem;
-  /* background: none; */
-  margin-right: 50px;
   width: 4rem;
   height: 4rem;
   border-radius: 50px;
@@ -212,23 +223,22 @@
 #priority-head {
   text-align: center;
 }
-#project-title, #project-title-head h3 {
-  text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.575);
-}
 
 #todo-head, .todo-item {
   display: grid;
-  grid-template-columns: 4fr 0.7fr 0.9fr 1.5fr 50px;
+  grid-template-columns: 4fr 0.7fr 0.9fr 1.5fr 50px 35px;
   margin: 0px 50px;
 }
 #todo-head {
+  top: 200px;
+  padding-bottom: 0.6rem;
   border-bottom: 1px solid black;
   font-size: 1.6rem;
-  margin-top: 20px;
+  margin-bottom: 0.5rem;
 }
 #add-task-btn {
   position: absolute;
-  bottom: 4px;
+  bottom: 1rem;
   left: 110px;
   height: 25px;
   width: 25px;
@@ -250,10 +260,17 @@
 }
 
 #todo-list {
+  /* position: relative; */
   font-size: 1.5rem;
   padding: 5px 0px;
   height: 70vh;
   overflow-y: auto;
+  padding-bottom: 4rem;
+  /* z-index: 5000; */
+}
+.current-td-edit {
+  position: relative;
+  z-index: 5000;
 }
 
 .form-container {
@@ -326,7 +343,7 @@
   right: 10px;
   height: 27px;
   width: 27px;
-  background-image: url(../img/close-button.svg);
+  background-image: url(../img/x-circle.svg);
   background-repeat: no-repeat;
   background-position: center center;
   background-size: 120%;
@@ -337,6 +354,8 @@
 .close-form:focus {
   height: 29px;
   width: 29px;
+  border: 2px solid black;
+  background-image: url(../img/x-circle-thick.svg);
   background-color: var(--red);
   box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.671);
 }
@@ -523,7 +542,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 #edit-instructions {
   display: none;
   position: absolute;
-  top: 2rem;
+  top: 0;
   left: 47%;
   transform: translateX(-50%);
   color: white;
@@ -672,4 +691,32 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 #restore-form-div {
   top: 100px;
+}
+
+.trash-div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.trash {
+  margin: 2px;
+  width: 75%;
+  height: 60%;
+  background-color: rgba(255, 255, 255, 0.877);
+  background-image: url(../img/delete-thin-black.svg);
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: 100% 100%;
+  border-radius: 5px;
+  outline: 2px solid rgba(0, 0, 0, 0.507);
+}
+.trash:hover,
+.trash:focus {
+  cursor: pointer;
+  width: 90%;
+  height: 70%;
+  background-color: var(--red);
+  background-image: url(../img/delete-thick-white.svg);
+  box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.671);
+  outline: 2px solid rgba(0, 0, 0, 0.507);
 }
